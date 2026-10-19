@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.zigrax.calculator",
+        "sha256_cert_fingerprints": ["F4:B1:5B:4E:E6:58:8D:E4:3A:99:46:B0:F3:C4:F5:31:DB:A7:64:D5:24:29:62:56:44:49:A9:76:8D:CD:79:F2"]
+      }
+    }]
