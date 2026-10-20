@@ -6,9 +6,9 @@
 <meta name="description" content="حاسبة علمية متطورة: حل المعادلات بالخطوات: جبر رمزي، تكامل وتفاضل، مصفوفات، معادلات، رسم بياني، إحصاء واحتمالات، مقاطع إنشائية، مالية وتحويل وحدات.">
 <meta name="theme-color" content="#2a4fc4">
 <title>حاسبة علمية متطورة</title>
-<link rel="icon" href="icon-192.png">
+<link rel="icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="حاسبة علمية متطورة">
 <style>*,*::before,*::after{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -289,6 +289,12 @@ table.ut td.n{font-family:var(--f-num);direction:ltr;text-align:left;font-varian
 .formula{font-family:var(--f-num);direction:ltr;text-align:left;color:var(--muted);font-size:.84rem;margin-top:8px}
 [data-page][hidden],.sub[hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+html[data-lang] .mtile[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:-2px}
+#modeName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:9em}
+#langBtn{display:inline-flex;align-items:center;justify-content:center;min-width:36px;flex:none}
+.hbtn{flex:none}
+#modeBtn{flex:1 1 0;min-width:0;overflow:hidden}
+@media (max-width:480px){.status{display:none}}
 </style>
 
 </head>
@@ -298,7 +304,8 @@ table.ut td.n{font-family:var(--f-num);direction:ltr;text-align:left;font-varian
     <span class="brand"><span class="mark" aria-hidden="true">∑</span>حاسبة علمية متطورة</span>
     <button id="modeBtn" type="button" aria-haspopup="dialog"><span class="ic" id="modeIc">=</span><span id="modeName">الحاسبة</span><span class="car">▾</span></button>
     <div class="status"><span id="stAng">DEG</span><span id="stFmt">NORM</span></div>
-    <button id="camBtn" class="hbtn ico cam" type="button" aria-label="تصوير السؤال" title="تصوير السؤال"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" style="display:block;margin:auto"><path d="M4 8h3l1.6-2.2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+    <button id="camBtn" class="hbtn ico cam" type="button" aria-label="تصوير السؤال (قريباً)" title="تصوير السؤال (قريباً)"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" style="display:block;margin:auto"><path d="M4 8h3l1.6-2.2h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+    <button id="langBtn" class="hbtn ico" type="button" aria-haspopup="dialog" aria-label="اللغة" title="اللغة"><span aria-hidden="true">🌐</span></button>
     <button id="themeBtn" class="hbtn ico" type="button" aria-label="تبديل المظهر" title="فاتح / داكن"><svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true" style="display:block;margin:auto"><circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 3a7 7 0 0 1 0 14z" fill="currentColor"/></svg></button>
     <button id="histBtn" class="hbtn" type="button" aria-label="السجل"><span aria-hidden="true">⟲</span> السجل</button>
   </header>
@@ -568,6 +575,12 @@ table.ut td.n{font-family:var(--f-num);direction:ltr;text-align:left;font-varian
   </div>
 </div>
 
+<div class="overlay" id="langSheet" hidden role="dialog" aria-label="اللغة">
+  <div class="sheet">
+    <div class="sheet-h"><b>اللغة</b><button class="xbtn" data-close aria-label="إغلاق">✕</button></div>
+    <div class="mgrid" id="langGrid"></div>
+  </div>
+</div>
 <div class="overlay" id="menu" hidden role="dialog" aria-label="الأوضاع">
   <div class="sheet">
     <div class="sheet-h"><b>اختر الوضع</b><button class="xbtn" data-close aria-label="إغلاق">✕</button></div>
@@ -583,7 +596,7 @@ table.ut td.n{font-family:var(--f-num);direction:ltr;text-align:left;font-varian
 <div class="overlay" id="scanSheet" hidden role="dialog" aria-label="تصوير السؤال">
   <div class="sheet scan">
     <div class="sheet-h"><b>تصوير السؤال</b><button class="xbtn" data-close aria-label="إغلاق">✕</button></div>
-    <p class="muted" style="margin:0 0 10px">صوّر المسألة، مطبوعة أو بخط اليد، وسيكتبها القارئ في الحاسبة لتراجعها قبل الحل.</p>
+    <p class="muted" style="margin:0 0 10px">صوّر المسألة المطبوعة وحدّدها، فيكتبها القارئ في الحاسبة لتراجعها قبل الحل. تتم القراءة على جهازك ولا تُرسل الصورة إلى أي مكان. خط اليد قد يحتاج تصحيحاً.</p>
     <div class="btns">
       <label class="btn" for="camIn">التقاط صورة</label><input id="camIn" type="file" accept="image/*" capture="environment" hidden>
       <label class="btn ghost" for="galIn">من المعرض</label><input id="galIn" type="file" accept="image/*" hidden>
@@ -597,13 +610,6 @@ table.ut td.n{font-family:var(--f-num);direction:ltr;text-align:left;font-varian
       <p class="muted" id="scanNote" style="margin:6px 0 10px"></p>
       <div class="btns"><button class="btn" id="scanEdit">نقل إلى الحاسبة للتعديل</button><button class="btn ghost" id="scanSolve">حل مباشرة</button></div>
     </div>
-    <details class="scan-set" id="scanSet">
-      <summary>إعدادات القارئ</summary>
-      <p class="muted">يعمل القارئ تلقائياً ولا يحتاج أي إعداد. هذا الخيار للمتقدمين فقط: إذا كان لديك مفتاح Gemini خاص بك يمكنك إضافته هنا ليُستخدم بدلاً من القارئ العام، ويُحفظ على هذا الجهاز فقط.</p>
-      <div class="field"><label for="gemKey">مفتاح Gemini خاص (اختياري)</label><input id="gemKey" class="kbok" type="password" autocomplete="off" spellcheck="false" placeholder="AIza…"></div>
-      <div class="field" style="margin-top:8px"><label for="gemModel">النموذج</label><input id="gemModel" class="kbok" type="text" autocomplete="off" spellcheck="false" value="gemini-2.5-flash"></div>
-      <div class="row" style="margin-top:8px;align-items:center"><button class="btn ghost sm" id="gemSave" type="button">حفظ</button><span class="muted" id="gemSaved"></span></div>
-    </details>
   </div>
 </div>
 <div class="toast" id="toast" hidden role="status"></div>
@@ -1491,25 +1497,13 @@ function getSampler(){
   if(!samplerReady) samplerReady=(async()=>{ try{ if(window.claude&&typeof window.claude.use==='function'){ const s=await window.claude.use('sample'); if(s){ const lim=await s.limits().catch(()=>null); if(lim&&lim.images){ sampler=s; return s } } } }catch(e){} return null })();
   return samplerReady;
 }
-const gemKey=()=>{ try{ return localStorage.getItem('mizan_gem_key')||'' }catch(e){ return '' } };
-const gemModel=()=>{ try{ return localStorage.getItem('mizan_gem_model')||'gemini-2.5-flash' }catch(e){ return 'gemini-2.5-flash' } };
 function showToast(msg){ let t=$('#toast'); t.textContent=msg; t.hidden=false; if(matchMedia('(max-width:900px)').matches){ t.style.top='auto'; t.style.bottom=($('#pad').getBoundingClientRect().height+12)+'px' } else { t.style.top=''; t.style.bottom='' } t.classList.remove('show'); void t.offsetWidth; t.classList.add('show'); clearTimeout(showToast.h); showToast.h=setTimeout(()=>{ t.hidden=true },3600) }
 async function refreshEngine(){
   const E=$('#scanEngine'); E.textContent='…'; const s=await getSampler();
   if(s){ E.textContent='القارئ: Claude'; return 'claude' }
-  if(gemKey()){ E.textContent='القارئ: Gemini (مفتاحك)'; return 'gemini' }
-  E.textContent='القارئ جاهز'; return 'proxy';
+  E.textContent=ocrInstalled()?'القارئ على جهازك ويعمل دون إنترنت':'أول قراءة تحمّل القارئ ('+OCR.size+' MB) مرة واحدة'; return 'local';
 }
-const READER_URL='https://calculator-reader.vercel.app/api/read';
-const READER_ERR={limit:'وصلت الحد اليومي لقراءة الصور، حاول غداً.',quota:'القارئ مشغول الآن، حاول بعد قليل.',no_key:'القارئ غير مفعّل حالياً، حاول لاحقاً.',origin:'القارئ متاح من تطبيق الحاسبة فقط.',image:'الصورة كبيرة أو غير صالحة، جرّب صورة أخرى.'};
-async function readWithProxy(blob){
-  let r; try{ r=await fetch(READER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:await blobB64(blob),mime:'image/jpeg'})}) }
-  catch(e){ throw new Error('تحتاج اتصالاً بالإنترنت لقراءة الصورة.') }
-  const j=await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error(READER_ERR[j.error]||'تعذّرت القراءة، حاول مرة أخرى.');
-  return j;
-}
-function openScan(){ openSheet('scanSheet'); refreshEngine(); try{ $('#gemKey').value=gemKey(); $('#gemModel').value=gemModel() }catch(e){} }
+function openScan(){ openSheet('scanSheet'); refreshEngine() }
 function drawScan(){
   const cv=$('#scanCv'); if(!scanImg) return; const W=Math.min(cv.parentElement.clientWidth||600,900), s=W/scanImg.width, H=Math.round(scanImg.height*s);
   const dpr=window.devicePixelRatio||1; cv.width=W*dpr; cv.height=H*dpr; cv.style.width=W+'px'; cv.style.height=H+'px'; cv._s=s;
@@ -1522,6 +1516,10 @@ function loadScanFile(file){
   im.onerror=()=>{ $('#scanStatus').textContent='تعذّر فتح الصورة. جرّب صورة بصيغة JPG أو PNG.' };
   im.src=url;
 }
+function scanCanvas(){ const cv=document.createElement('canvas'); let sx=0,sy=0,sw=scanImg.width,sh=scanImg.height;
+  if(scanRect&&Math.abs(scanRect.w)>12&&Math.abs(scanRect.h)>12){ const s=$('#scanCv')._s, r=scanRect; sx=Math.min(r.x,r.x+r.w)/s; sy=Math.min(r.y,r.y+r.h)/s; sw=Math.abs(r.w)/s; sh=Math.abs(r.h)/s }
+  const k=Math.min(1,1400/Math.max(sw,sh)); cv.width=Math.max(1,Math.round(sw*k)); cv.height=Math.max(1,Math.round(sh*k));
+  const g=cv.getContext('2d',{willReadFrequently:true}); g.fillStyle='#fff'; g.fillRect(0,0,cv.width,cv.height); g.drawImage(scanImg,sx,sy,sw,sh,0,0,cv.width,cv.height); return cv }
 function scanBlob(){
   return new Promise(res=>{ const cv=document.createElement('canvas'); let sx=0,sy=0,sw=scanImg.width,sh=scanImg.height;
     if(scanRect&&Math.abs(scanRect.w)>12&&Math.abs(scanRect.h)>12){ const s=$('#scanCv')._s, r=scanRect; sx=Math.min(r.x,r.x+r.w)/s; sy=Math.min(r.y,r.y+r.h)/s; sw=Math.abs(r.w)/s; sh=Math.abs(r.h)/s }
@@ -1531,22 +1529,187 @@ function scanBlob(){
 }
 const blobB64=b=>new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(String(fr.result).split(',')[1]); fr.onerror=rej; fr.readAsDataURL(b) });
 function parseScanJSON(t){ if(t&&typeof t==='object') return t; const s=String(t||''), i=s.indexOf('{'), j=s.lastIndexOf('}'); if(i<0||j<i) throw new Error('bad'); return JSON.parse(s.slice(i,j+1)) }
-async function readWithGemini(blob){
-  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(gemModel())+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':gemKey()},
-    body:JSON.stringify({contents:[{parts:[{text:SCAN_PROMPT},{inline_data:{mime_type:'image/jpeg',data:await blobB64(blob)}}]}],generationConfig:{temperature:0,response_mime_type:'application/json'}})});
-  const j=await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error(r.status===400||r.status===403?'مفتاح Gemini غير صالح أو غير مفعّل':r.status===429?'تجاوزت الحد المجاني لـ Gemini، حاول بعد قليل':'خطأ من خدمة Gemini ('+r.status+')');
-  return parseScanJSON((j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts||[]).map(p=>p.text||'').join(''));
+
+
+/* ================= on-device math reader (LaTeX-OCR, ONNX, runs fully in the browser) ================= */
+const OCR={valid:()=>true,parts:{res:2,enc:4,dec:1},size:125,ready:null,cancel:false};
+const OCR_MEAN=0.7931*255, OCR_STD=0.1738*255;
+function loadScript(src){ return new Promise((ok,no)=>{ const s=document.createElement('script'); s.src=src; s.onload=ok; s.onerror=()=>no(new Error('script')); document.head.appendChild(s) }) }
+async function ocrFetchModel(name,n,onp,done,total){
+  const bufs=[]; for(let i=0;i<n;i++){
+    const r=await fetch(`ocr-${name}.${i}.bin`); if(!r.ok) throw new Error('model');
+    const len=+r.headers.get('content-length')||0, rd=r.body&&r.body.getReader?r.body.getReader():null;
+    if(!rd){ const b=new Uint8Array(await r.arrayBuffer()); bufs.push(b); done.v+=b.length; onp&&onp(done.v/total); continue }
+    const chunks=[]; let got=0; for(;;){ const {done:d,value}=await rd.read(); if(d) break; chunks.push(value); got+=value.length; done.v+=value.length; onp&&onp(done.v/total) }
+    const b=new Uint8Array(got); let o=0; for(const c of chunks){ b.set(c,o); o+=c.length } bufs.push(b);
+  }
+  const L=bufs.reduce((a,b)=>a+b.length,0), out=new Uint8Array(L); let o=0; for(const b of bufs){ out.set(b,o); o+=b.length } return out;
 }
+function ocrLoad(onp){
+  if(OCR.ready) return OCR.ready;
+  OCR.ready=(async()=>{
+    if(!window.ort) await loadScript('ort.wasm.min.js');
+    ort.env.wasm.numThreads=1; ort.env.wasm.simd=true; ort.env.wasm.proxy=false;
+    ort.env.wasm.wasmPaths=new URL('./',location.href).href;
+    const total=OCR.size*1048576, done={v:0};
+    const res=await ocrFetchModel('res',OCR.parts.res,onp,done,total), enc=await ocrFetchModel('enc',OCR.parts.enc,onp,done,total), dec=await ocrFetchModel('dec',OCR.parts.dec,onp,done,total);
+    const tj=await (await fetch('ocr-tokenizer.json')).json();
+    const o={executionProviders:['wasm'],graphOptimizationLevel:'all'};
+    OCR.res=await ort.InferenceSession.create(res,o); OCR.enc=await ort.InferenceSession.create(enc,o); OCR.dec=await ort.InferenceSession.create(dec,o);
+    OCR.vocab=[]; for(const [t,i] of Object.entries(tj.model.vocab)) OCR.vocab[i]=t;
+    try{ localStorage.setItem('mizan_ocr_ok','1') }catch(e){}
+    return true;
+  })().catch(e=>{ OCR.ready=null; throw e });
+  return OCR.ready;
+}
+const ocrInstalled=()=>{ try{ return localStorage.getItem('mizan_ocr_ok')==='1' }catch(e){ return false } };
+
+/* --- gray images as {w,h,d:Float32Array} --- */
+function grayFromCanvas(cv){ const g=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data, n=cv.width*cv.height, d=new Float32Array(n);
+  for(let i=0;i<n;i++) d[i]=Math.round(0.299*g[4*i]+0.587*g[4*i+1]+0.114*g[4*i+2]); return {w:cv.width,h:cv.height,d} }
+// photo cleanup: divide by a blurred background (removes shadows/paper tint), keeps stroke shape
+function flatten(im){
+  const {w,h,d}=im, s=Math.max(1,Math.round(Math.min(w,h)/24)), sw=Math.max(1,Math.ceil(w/s)), sh=Math.max(1,Math.ceil(h/s)), small=new Float32Array(sw*sh);
+  for(let y=0;y<sh;y++) for(let x=0;x<sw;x++){ let m=0; for(let yy=y*s;yy<Math.min(h,(y+1)*s);yy++) for(let xx=x*s;xx<Math.min(w,(x+1)*s);xx++) m=Math.max(m,d[yy*w+xx]); small[y*sw+x]=m }
+  const bl=new Float32Array(sw*sh), R=2; for(let y=0;y<sh;y++) for(let x=0;x<sw;x++){ let a=0,c=0; for(let j=-R;j<=R;j++) for(let i=-R;i<=R;i++){ const X=x+i,Y=y+j; if(X>=0&&Y>=0&&X<sw&&Y<sh){ a+=small[Y*sw+X]; c++ } } bl[y*sw+x]=a/c }
+  const out=new Float32Array(w*h); for(let y=0;y<h;y++) for(let x=0;x<w;x++){ const fx=Math.min(sw-1,(x+.5)/s-.5), fy=Math.min(sh-1,(y+.5)/s-.5), x0=Math.max(0,Math.floor(fx)), y0=Math.max(0,Math.floor(fy)), x1=Math.min(sw-1,x0+1), y1=Math.min(sh-1,y0+1), ax=Math.max(0,fx-x0), ay=Math.max(0,fy-y0);
+    const b=(bl[y0*sw+x0]*(1-ax)+bl[y0*sw+x1]*ax)*(1-ay)+(bl[y1*sw+x0]*(1-ax)+bl[y1*sw+x1]*ax)*ay; out[y*w+x]=Math.min(255,Math.round(d[y*w+x]/Math.max(1,b)*255)) }
+  return {w,h,d:out};
+}
+// PIL-compatible separable resampling (BILINEAR support 1, LANCZOS support 3), rounding per pass like PIL's 8-bit path
+function resample(im,W,H,kind){
+  const sup=kind==='lanczos'?3:1, K=kind==='lanczos'?(x=>{ x=Math.abs(x); if(x>=3) return 0; if(x<1e-7) return 1; const p=Math.PI*x; return 3*Math.sin(p)*Math.sin(p/3)/(p*p) }):(x=>{ x=Math.abs(x); return x<1?1-x:0 });
+  const pass=(src,sw,sh,dw,horiz)=>{ const len=horiz?sw:sh, scale=len/dw, fs=Math.max(1,scale), sp=sup*fs, out=new Float32Array(horiz?dw*sh:sw*dw);
+    for(let o=0;o<dw;o++){ const c=(o+.5)*scale; let lo=Math.max(0,Math.floor(c-sp)), hi=Math.min(len,Math.ceil(c+sp)); const ws=[]; let t=0;
+      for(let i=lo;i<hi;i++){ const v=K((i-c+.5)/fs); ws.push(v); t+=v } if(t) for(let k=0;k<ws.length;k++) ws[k]/=t;
+      if(horiz){ for(let y=0;y<sh;y++){ let a=0; for(let k=0;k<ws.length;k++) a+=src[y*sw+lo+k]*ws[k]; out[y*dw+o]=Math.min(255,Math.max(0,Math.round(a))) } }
+      else { for(let x=0;x<sw;x++){ let a=0; for(let k=0;k<ws.length;k++) a+=src[(lo+k)*sw+x]*ws[k]; out[o*sw+x]=Math.min(255,Math.max(0,Math.round(a))) } } }
+    return out };
+  let d=im.d, w=im.w, h=im.h;
+  if(W!==w){ d=pass(d,w,h,W,true); w=W }
+  if(H!==h){ d=pass(d,w,h,H,false); h=H }
+  return {w,h,d};
+}
+// pix2tex pad(): normalize, make text dark on white, crop to text, pad to multiples of 32
+function ocrPad(im){
+  const {w,h,d}=im; let mn=255,mx=0; for(const v of d){ if(v<mn) mn=v; if(v>mx) mx=v }
+  const rng=(mx-mn)||1, n=new Float32Array(w*h); let mean=0; for(let i=0;i<n.length;i++){ n[i]=Math.floor((d[i]-mn)/rng*255); mean+=n[i] } mean/=n.length;
+  const dark=mean>128; if(!dark) for(let i=0;i<n.length;i++) n[i]=255-n[i];
+  let x0=w,y0=h,x1=-1,y1=-1; for(let y=0;y<h;y++) for(let x=0;x<w;x++){ const v=n[y*w+x]; const on=dark?v<128:255-v>128; if(on){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y } }
+  if(x1<0){ x0=0;y0=0;x1=w-1;y1=h-1 }
+  const cw=x1-x0+1, ch=y1-y0+1, W=Math.ceil(cw/32)*32, H=Math.ceil(ch/32)*32, out=new Float32Array(W*H).fill(255);
+  for(let y=0;y<ch;y++) for(let x=0;x<cw;x++) out[y*W+x]=n[(y+y0)*w+x+x0];
+  return {w:W,h:H,d:out};
+}
+function ocrMinMax(im){
+  let r=im; const rx=r.w/672, ry=r.h/192;
+  if(rx>1||ry>1){ const m=Math.max(rx,ry); r=resample(r,Math.max(1,Math.floor(r.w/m)),Math.max(1,Math.floor(r.h/m)),'bilinear') }
+  if(r.w<32||r.h<32){ const W=Math.max(r.w,32),H=Math.max(r.h,32),o=new Float32Array(W*H).fill(255); for(let y=0;y<r.h;y++) for(let x=0;x<r.w;x++) o[y*W+x]=r.d[y*r.w+x]; r={w:W,h:H,d:o} }
+  return r;
+}
+const ocrTensor=im=>{ const t=new Float32Array(im.w*im.h); for(let i=0;i<t.length;i++) t[i]=(im.d[i]-OCR_MEAN)/OCR_STD; return new ort.Tensor('float32',t,[1,1,im.h,im.w]) };
+async function ocrRun(gray){
+  const input=ocrMinMax(ocrPad(gray));
+  let r=1,w=input.w,h=input.h,fin=null,uw=w,uh=h;
+  for(let it=0;it<10;it++){
+    h=Math.floor(h*r); uw=Math.max(1,w); uh=Math.max(1,h);
+    const pad=ocrPad(ocrMinMax(resample(input,uw,uh,r>1?'bilinear':'lanczos')));
+    fin=pad; const o=await OCR.res.run({input:ocrTensor(pad)}), a=o.output.data; let bi=0; for(let i=1;i<a.length;i++) if(a[i]>a[bi]) bi=i;
+    w=(bi+1)*32; if(w===pad.w) break; r=w/pad.w;
+  }
+  const cands=[await ocrDecode(fin)];
+  for(const c of [0.85,1.15,0.72]){
+    const best=cands.reduce((a,b)=>a.score>b.score?a:b); if(best.ok&&best.conf>0.93) break;
+    const W=Math.max(8,Math.round(uw*c)), H=Math.max(8,Math.round(uh*c)); cands.push(await ocrDecode(ocrPad(ocrMinMax(resample(input,W,H,c>1?'bilinear':'lanczos')))));
+  }
+  return cands.reduce((a,b)=>a.score>b.score?a:b);
+}
+async function ocrDecode(fin){
+  const ctx=(await OCR.enc.run({input:ocrTensor(fin)})).output;
+  const ids=[1]; let conf=0;
+  for(let s=0;s<120;s++){
+    const x=new ort.Tensor('int64',BigInt64Array.from(ids.map(BigInt)),[1,ids.length]), m=new ort.Tensor('bool',new Uint8Array(ids.length).fill(1),[1,ids.length]);
+    const lg=(await OCR.dec.run({x,mask:m,context:ctx})).output, V=lg.dims[2], off=(ids.length-1)*V, d=lg.data;
+    let bi=0,bv=-Infinity; for(let i=0;i<V;i++){ const v=d[off+i]; if(v>bv){ bv=v; bi=i } }
+    let z=0; for(let i=0;i<V;i++) z+=Math.exp(d[off+i]-bv); conf+=Math.log(1/z);
+    ids.push(bi); if(bi===2) break;
+    if(ids.length>24){ const t=ids.slice(-12).join(','); if(ids.slice(-24,-12).join(',')===t) break }   // runaway repetition
+  }
+  const toks=ids.slice(1).filter(i=>i>2).map(i=>OCR.vocab[i]||'');
+  let s=toks.join(' ').split(' ').join('').replace(/Ġ/g,' ').trim();
+  const latex=ocrPost(s), calc=latexToCalc(latex), cf=Math.exp(conf/Math.max(1,ids.length-1)), ok=OCR.valid(calc);
+  return {latex, calc, conf:cf, ok, score:cf+(ok?0.25:0)+((calc.match(/=/g)||[]).length===1?0.15:0)-(ids[ids.length-1]===2?0:0.3)};
+}
+function ocrPost(s){ // pix2tex post_process
+  const reg=/(\\(operatorname|mathrm|text|mathbf)\s?\*? {.*?})/g; s=s.replace(reg,m=>m.replace(/ /g,''));
+  const L='[a-zA-Z]', N='[\\W_^\\d]'; let prev;
+  do{ prev=s; s=s.replace(new RegExp(`(?!\\\\ )(${N})\\s+?(${N})`,'g'),'$1$2').replace(new RegExp(`(?!\\\\ )(${N})\\s+?(${L})`,'g'),'$1$2').replace(new RegExp(`(${L})\\s+?(${N})`,'g'),'$1$2') }while(s!==prev);
+  return s;
+}
+
+/* --- LaTeX → this calculator's linear syntax --- */
+function latexToCalc(tex){
+  let s=' '+tex+' ';
+  s=s.replace(/\\[,;:!]/g,' ').replace(/\\frac\s*\{\s*d\s*\}\s*\{\s*d\s*x\s*\}/g,' \u0002 ');
+  s=s.replace(/\\(textstyle|displaystyle|scriptstyle|left|right|big|Big|bigg|Bigg|limits|nolimits|!|,|;|:|quad|qquad)(?![a-zA-Z])/g,' ').replace(/\\ /g,' ').replace(/~/g,' ');
+  s=s.replace(/\\(mathbf|mathrm|mathit|mathsf|mathtt|boldsymbol|bf|rm|it|tt|operatorname\*?|text|textrm|mathcal|cal|mathbb)\s*/g,'');
+  // letters the model confuses with x
+  s=s.replace(/\\(kappa|chi|varkappa)(?![a-zA-Z])/g,'x').replace(/([\^_]\{?)\\times/g,'$1x').replace(/\bX\b/g,'x');
+  s=s.replace(/\\cdot|\\times|\\ast/g,'*').replace(/\\div/g,'/').replace(/\\pm/g,'±').replace(/\\(leq|le)(?![a-z])/g,'<=').replace(/\\(geq|ge)(?![a-z])/g,'>=').replace(/\\neq/g,'!=').replace(/\\infty/g,'inf').replace(/\\pi(?![a-z])/g,'pi').replace(/\\theta/g,'x').replace(/\\alpha/g,'a').replace(/\\beta/g,'b');
+  s=s.replace(/\\(arcsin|arccos|arctan)/g,(m,f)=>'a'+f.slice(3)).replace(/\\(sin|cos|tan|cot|sec|csc|ln|log|exp|sinh|cosh|tanh)(?![a-z])/g,'$1 ');
+  // grouping
+  const grp=(str,i)=>{ while(str[i]===' ') i++; if(str[i]!=='{') { const m=str.slice(i).match(/^(\\[a-zA-Z]+|.)/); return [m?m[0]:'',i+(m?m[0].length:0)] } let dep=0,j=i; for(;j<str.length;j++){ if(str[j]==='{') dep++; else if(str[j]==='}'){ dep--; if(!dep) break } } return [str.slice(i+1,j),j+1] };
+  const wrap=v=>/^[\w.]+$/.test(v.trim())?v.trim():'('+v.trim()+')';
+  let guard=0, k;
+  while((k=s.search(/\\[dt]?frac/))>=0&&guard++<50){ const st=k+s.slice(k).match(/^\\[dt]?frac/)[0].length; const [a,i1]=grp(s,st), [b,i2]=grp(s,i1); const fr=wrap(latexToCalc(a))+'/'+wrap(latexToCalc(b)), nx=s.slice(i2).replace(/^[\s}]+/,'')[0]||''; s=s.slice(0,k)+(/[\w(\\]/.test(nx)?'('+fr+')':fr)+s.slice(i2) }
+  while((k=s.indexOf('\\sqrt'))>=0&&guard++<100){ let i=k+5, n=null; while(s[i]===' ') i++; if(s[i]==='['){ const e=s.indexOf(']',i); n=s.slice(i+1,e); i=e+1 } const [a,i2]=grp(s,i); s=s.slice(0,k)+(n?`root(${latexToCalc(a)}, ${n})`:`sqrt(${latexToCalc(a)})`)+s.slice(i2) }
+  // integrals with limits
+  s=s.replace(/\\int\s*_\s*(\{[^{}]*\}|\S)\s*\^\s*(\{[^{}]*\}|\S)/g,(m,a,b)=>'∫['+a.replace(/[{}]/g,'')+','+b.replace(/[{}]/g,'')+'] ').replace(/\\int/g,'∫ ');
+  // powers / subscripts
+  while((k=s.search(/\^/))>=0&&guard++<200){ const [a,i2]=grp(s,k+1); const v=latexToCalc(a).trim(); s=s.slice(0,k)+(/^[\w.]$|^\d+$/.test(v)?'\u0001'+v:'\u0001('+v+')')+s.slice(i2) }
+  s=s.replace(/\u0001/g,'^');
+  s=s.replace(/_\s*(\{[^{}]*\}|\S)/g,'');
+  s=s.replace(/\\[a-zA-Z]+/g,' ').replace(/[{}]/g,'').replace(/(^|[\s=+\-*/(])l(?=$|[\s=+\-*/)])/g,'$11').replace(/\s*d\s*x\s*$/,' dx').replace(/\s+/g,' ').trim();
+  s=s.replace(/\b(a?sin|a?cos|a?tan|cot|sec|csc|ln|log|exp|sinh|cosh|tanh) +([a-z0-9.]+(?:\^[a-z0-9.]+)?)(?![a-z0-9(])/g,'$1($2)');
+  s=s.replace(/(sqrt|root)\(\(([^()]*)\)/g,'$1($2');
+  s=s.replace(/\s*([=+\-*/^(),<>])\s*/g,'$1').replace(/([=+\-])/g,' $1 ').replace(/\s+/g,' ').replace(/^ - /,'-').replace(/\( - /g,'(-').trim();
+  return s.replace(/\u0002\s*/g,'d/dx ').trim();
+}
+// split a cropped photo into separate equation lines (for systems); merges small gaps inside fractions / exponents
+function ocrSegments(g){
+  const {w,h,d}=g, ink=new Uint32Array(h); for(let y=0;y<h;y++){ let c=0; for(let x=0;x<w;x++) if(d[y*w+x]<150) c++; ink[y]=c }
+  const thr=Math.max(2,w*0.003); let runs=[], y0=-1;
+  for(let y=0;y<=h;y++){ const on=y<h&&ink[y]>thr; if(on&&y0<0) y0=y; if(!on&&y0>=0){ runs.push([y0,y-1]); y0=-1 } }
+  if(!runs.length) return [g];
+  const H=Math.max(...runs.map(r=>r[1]-r[0]+1));
+  let merged=[runs[0].slice()]; for(const r of runs.slice(1)){ const L=merged[merged.length-1]; if(r[0]-L[1]<H*0.45||(r[1]-r[0]+1)<H*0.3||(L[1]-L[0]+1)<H*0.3) L[1]=r[1]; else merged.push(r.slice()) }
+  if(merged.length>8) merged=[[runs[0][0],runs[runs.length-1][1]]];
+  return merged.map(([a,b])=>{ const p=Math.round(H*0.25), t=Math.max(0,a-p), e=Math.min(h-1,b+p), hh=e-t+1, o=new Float32Array(w*hh); o.set(d.subarray(t*w,(e+1)*w)); return {w,h:hh,d:o} });
+}
+async function readLocal(cv,onp){
+  await ocrLoad(onp);
+  const g=flatten(grayFromCanvas(cv)), segs=ocrSegments(g), lines=[]; let low=false;
+  for(const sg of segs){ const r=await ocrRun(sg); const c=r.calc;
+    if(!c||!/[0-9a-z]/i.test(c)||(!r.ok&&r.conf<0.85)||c.length>160) { low=true; continue }
+    lines.push(c); if(r.conf<0.8||!r.ok) low=true }
+  if(!lines.length) return {lines, note:'لم أتمكن من قراءة السؤال بوضوح. صوّر سؤالاً مطبوعاً بإضاءة جيدة، وحدّد السؤال فقط، أو اكتبه بالأزرار.'};
+  return {lines, note: low?'قرأته على جهازك، لكن بعض الرموز غير واضحة. راجعه وعدّله قبل الحل.':'قرأته على جهازك. راجعه قبل الحل.'};
+}
+
+OCR.valid=line=>{ try{ const bp=bookParts(line); const body=bp?bp.body:line; const sides=body.split('=');
+  if(sides.length>2||sides.some(x=>!x.trim())) return false; sides.forEach(x=>M.parse(norm(x))); return !/[A-Z]{2,}|\\/.test(body) }catch(e){ return false } };
+
 const SAMPLE_ERR={not_granted:'لم يُسمح للحاسبة باستخدام القارئ. اسمح بذلك من إعدادات الصفحة.',rate_limited:'طلبات كثيرة، حاول بعد قليل.',image_rejected:'الصورة غير مقبولة، جرّب صورة أخرى.',refused:'تعذّرت قراءة هذه الصورة.',session_expired:'سجّل الدخول من جديد.',invalid_json:'لم أفهم الصورة، جرّب صورة أوضح.'};
 async function runScan(){
   if(!scanImg) return; const st=$('#scanStatus'), go=$('#scanGo'); go.disabled=true; st.textContent='جارٍ قراءة السؤال…'; $('#scanResult').hidden=true;
   try{
     const engine=await refreshEngine();
-    const blob=await scanBlob(); let out;
-    if(engine==='claude'){ try{ out=parseScanJSON(await sampler.json(SCAN_PROMPT,{images:[blob],modelTier:'default'})) }catch(e){ throw new Error(SAMPLE_ERR[e&&e.code]||'تعذّرت القراءة، حاول مرة أخرى.') } }
-    else if(engine==='gemini') out=await readWithGemini(blob);
-    else out=await readWithProxy(blob);
+    let out;
+    if(engine==='claude'){ const blob=await scanBlob(); try{ out=parseScanJSON(await sampler.json(SCAN_PROMPT,{images:[blob],modelTier:'default'})) }catch(e){ throw new Error(SAMPLE_ERR[e&&e.code]||'تعذّرت القراءة، حاول مرة أخرى.') } }
+    else { const first=!OCR.res; if(first&&!ocrInstalled()) st.textContent='جارٍ تحميل القارئ لأول مرة… 0%';
+      try{ out=await readLocal(scanCanvas(),p=>{ st.textContent='جارٍ تحميل القارئ لأول مرة… '+Math.min(99,Math.round(p*100))+'%' }) }
+      catch(e){ throw new Error(OCR.res?'تعذّرت قراءة الصورة، جرّب صورة أوضح.':'تعذّر تحميل القارئ. تحتاج اتصالاً بالإنترنت لأول مرة فقط.') }
+      st.textContent=''; refreshEngine() }
     const lines=(Array.isArray(out.lines)?out.lines:[]).map(x=>String(x).trim()).filter(Boolean).map(x=>toSup(x.replace(/\*\*/g,'^')));
     if(!lines.length){ st.textContent=out.note||'لم أجد مسألة رياضية في الصورة.'; go.disabled=false; return }
     scanLinesOut=lines; st.textContent='';
@@ -1560,7 +1723,7 @@ function sendScan(solve){
   if(solve) evaluate(); else showToast('راجع السؤال وعدّله بالأزرار، ثم اضغط =');
 }
 (function initScan(){
-  $('#camBtn').onclick=openScan;
+  $('#camBtn').onclick=()=>showToast('قريباً سوف تتوفر هذه الميزة');
   $('#camIn').onchange=e=>{ loadScanFile(e.target.files[0]); e.target.value='' };
   $('#galIn').onchange=e=>{ loadScanFile(e.target.files[0]); e.target.value='' };
   const cv=$('#scanCv'); let p0=null;
@@ -1570,7 +1733,6 @@ function sendScan(solve){
   $('#scanReset').onclick=()=>{ scanRect=null; $('#scanReset').hidden=true; drawScan() };
   $('#scanGo').onclick=runScan;
   $('#scanEdit').onclick=()=>sendScan(false); $('#scanSolve').onclick=()=>sendScan(true);
-  $('#gemSave').onclick=()=>{ try{ localStorage.setItem('mizan_gem_key',$('#gemKey').value.trim()); localStorage.setItem('mizan_gem_model',$('#gemModel').value.trim()||'gemini-2.5-flash') }catch(e){} refreshEngine(); $('#gemSaved').textContent='تم الحفظ على هذا الجهاز' };
   window.addEventListener('resize',()=>{ if(!$('#scanSheet').hidden) drawScan() });
   getSampler();
 })();
@@ -2163,6 +2325,2256 @@ $('#bAnyB').addEventListener('input',()=>{ try{ setBases(curN,'none') }catch(e){
 $('#bOther').addEventListener('input',calcLogic);
 setBases(2026n,'bDec');
 
+/* ===== translations: Arabic source text -> [en, fr, ja, zh, hi, ku] ===== */
+const I18N_DATA={
+"(اتركها فارغة لتكامل غير محدد)": [
+"(leave empty for indefinite integral)",
+"(laisser vide pour une intégrale indéfinie)",
+"（不定積分は空欄）",
+"（不定积分请留空）",
+"(अनिश्चित समाकलन के लिए खाली छोड़ें)",
+"(بۆ ئینتیگرالی نادیار بەتاڵی بهێڵەوە)"
+],
+"(اختياري)": [
+"(optional)",
+"(facultatif)",
+"（任意）",
+"（可选）",
+"(वैकल्पिक)",
+"(ئیختیاری)"
+],
+"P(X = x) أو الكثافة": [
+"P(X = x) or density",
+"P(X = x) ou densité",
+"P(X = x) または密度",
+"P(X = x) 或密度",
+"P(X = x) या घनत्व",
+"P(X = x) یان چڕی"
+],
+"n من": [
+"n of",
+"n de",
+"n の",
+"n 的",
+"n में से",
+"n لە"
+],
+"x إلى": [
+"x to",
+"x à",
+"x から",
+"x 到",
+"x से",
+"x بۆ"
+],
+"x من": [
+"x from",
+"x de",
+"x から",
+"x 从",
+"x से",
+"x لە"
+],
+"y إلى": [
+"y to",
+"y à",
+"y から",
+"y 到",
+"y से",
+"y بۆ"
+],
+"y من (قد تعتمد على x)": [
+"y from (may depend on x)",
+"y de (peut dépendre de x)",
+"y から（x に依存する場合あり）",
+"y 从（可能依赖 x）",
+"y से (x पर निर्भर हो सकता है)",
+"y لە (لەوانەیە پشت بە x ببەستێت)"
+],
+"Σ و Π": [
+"Σ and Π",
+"Σ et Π",
+"Σ と Π",
+"Σ 和 Π",
+"Σ और Π",
+"Σ و Π"
+],
+"أساس آخر": [
+"Other base",
+"Autre base",
+"別の基数",
+"其他进制",
+"अन्य आधार",
+"بنەمای تر"
+],
+"أسّي y = a·e^(bx)": [
+"Exponential y = a·e^(bx)",
+"Exponentielle y = a·e^(bx)",
+"指数 y = a·e^(bx)",
+"指数 y = a·e^(bx)",
+"घातांकी y = a·e^(bx)",
+"ئیکسپۆنەنشیاڵ y = a·e^(bx)"
+],
+"أشهر": [
+"months",
+"mois",
+"ヶ月",
+"个月",
+"महीने",
+"مانگ"
+],
+"أصفار": [
+"Zeros",
+"Zéros",
+"ゼロ",
+"零",
+"शून्य",
+"سفرەکان"
+],
+"أمثلة": [
+"Examples",
+"Exemples",
+"例",
+"示例",
+"उदाहरण",
+"نموونەکان"
+],
+"أنشئ": [
+"Create",
+"Créer",
+"作成",
+"创建",
+"बनाएँ",
+"دروستکردن"
+],
+"أيام": [
+"days",
+"jours",
+"日",
+"天",
+"दिन",
+"ڕۆژەکان"
+],
+"أُسّي (λ)": [
+"Exponential (λ)",
+"Exponentielle (λ)",
+"指数 (λ)",
+"指数 (λ)",
+"घातांकी (λ)",
+"ئیکسپۆنەنشیاڵ (λ)"
+],
+"إحصاء وصفي لـ X": [
+"Descriptive statistics of X",
+"Statistiques descriptives de X",
+"X の記述統計",
+"X 的描述统计",
+"X का वर्णनात्मक सांख्यिकी",
+"ئامارە وەسفییەکانی X"
+],
+"إضافة أو طرح مدة": [
+"Add or subtract a period",
+"Ajouter ou soustraire une durée",
+"期間の加算・減算",
+"加上或减去时间段",
+"अवधि जोड़ें या घटाएँ",
+"ماوەیەک زیاد یان کەم بکە"
+],
+"إلغاء التحديد": [
+"Clear selection",
+"Annuler la sélection",
+"選択解除",
+"取消选择",
+"चयन रद्द करें",
+"هەڵبژاردن هەڵبوەشێنە"
+],
+"إلى": [
+"to",
+"à",
+"まで",
+"到",
+"तक",
+"بۆ"
+],
+"إلى b": [
+"to b",
+"à b",
+"b まで",
+"到 b",
+"b तक",
+"بۆ b"
+],
+"إيداع شهري": [
+"Monthly deposit",
+"Dépôt mensuel",
+"毎月の預入",
+"每月存入",
+"मासिक जमा",
+"پارەدانی مانگانە"
+],
+"احسب": [
+"Calculate",
+"Calculer",
+"計算",
+"计算",
+"गणना करें",
+"ژمێرە"
+],
+"احسب الجذور": [
+"Find roots",
+"Calculer les racines",
+"解を求める",
+"求根",
+"मूल ज्ञात करें",
+"ڕەگەکان بدۆزەوە"
+],
+"اختر الوضع": [
+"Choose mode",
+"Choisir le mode",
+"モードを選択",
+"选择模式",
+"मोड चुनें",
+"دۆخ هەڵبژێرە"
+],
+"اختر عملية.": [
+"Choose an operation.",
+"Choisissez une opération.",
+"操作を選択してください。",
+"请选择一个操作。",
+"कोई क्रिया चुनें।",
+"کارێک هەڵبژێرە."
+],
+"ادخار": [
+"Savings",
+"Épargne",
+"貯蓄",
+"储蓄",
+"बचत",
+"پاشەکەوت"
+],
+"اسحب للتحريك، والعجلة أو إصبعين للتكبير.": [
+"Drag to move, wheel or two fingers to zoom.",
+"Glissez pour déplacer, molette ou deux doigts pour zoomer.",
+"ドラッグで移動、ホイールかピンチで拡大。",
+"拖动移动，滚轮或双指缩放。",
+"खींचकर घुमाएँ, पहिया या दो उंगलियों से ज़ूम करें।",
+"ڕاکێشان بۆ جوڵاندن، تۆپەڵ یان دوو پەنجە بۆ گەورەکردن."
+],
+"اشتق": [
+"Differentiate",
+"Dériver",
+"微分",
+"求导",
+"अवकलन",
+"جیاکردنەوە"
+],
+"اشتقاق": [
+"Derivative",
+"Dérivée",
+"微分",
+"导数",
+"अवकलज",
+"دەرهێنان"
+],
+"الأثر": [
+"Trace",
+"Trace",
+"トレース",
+"迹",
+"ट्रेस",
+"ڕێگە"
+],
+"الاحتمال": [
+"Probability",
+"Probabilité",
+"確率",
+"概率",
+"प्रायिकता",
+"ئەگەر"
+],
+"الانحدار": [
+"Regression",
+"Régression",
+"回帰",
+"回归",
+"समाश्रयण",
+"ڕیگرێسیۆن"
+],
+"التاريخ": [
+"Date",
+"Date",
+"日付",
+"日期",
+"तिथि",
+"بەروار"
+],
+"التركيب": [
+"Composition",
+"Composition",
+"合成",
+"组合",
+"संयोजन",
+"پێکهاتە"
+],
+"التقاط صورة": [
+"Take photo",
+"Prendre une photo",
+"写真を撮る",
+"拍照",
+"फ़ोटो लें",
+"وێنە بگرە"
+],
+"التوافيق والتباديل": [
+"Combinations & permutations",
+"Combinaisons et permutations",
+"組み合わせと順列",
+"组合与排列",
+"संचय और क्रमचय",
+"هاوبەشی و گۆڕینەوە"
+],
+"التوزيع": [
+"Distribution",
+"Distribution",
+"分布",
+"分布",
+"बंटन",
+"دابەشکردن"
+],
+"الجدول السنوي": [
+"Annual schedule",
+"Échéancier annuel",
+"年間スケジュール",
+"年度计划",
+"वार्षिक तालिका",
+"خشتەی ساڵانە"
+],
+"الحاسبة": [
+"Calculator",
+"Calculatrice",
+"電卓",
+"计算器",
+"कैलकुलेटर",
+"ژمێرکار"
+],
+"الحد العام بدلالة n": [
+"General term in n",
+"Terme général en n",
+"n の一般項",
+"关于 n 的通项",
+"n का सामान्य पद",
+"گشتی جێگە بە n"
+],
+"الخطوة": [
+"Step",
+"Étape",
+"ステップ",
+"步骤",
+"चरण",
+"هەنگاو"
+],
+"الرتبة": [
+"Order",
+"Ordre",
+"次数",
+"阶",
+"क्रम",
+"ڕیز"
+],
+"السجل": [
+"History",
+"Historique",
+"履歴",
+"历史",
+"इतिहास",
+"مێژوو"
+],
+"السنوات": [
+"Years",
+"Années",
+"年",
+"年",
+"वर्ष",
+"ساڵەکان"
+],
+"الشكل": [
+"Shape",
+"Forme",
+"形",
+"形状",
+"आकार",
+"شێوە"
+],
+"العائد السنوي %": [
+"Annual yield %",
+"Rendement annuel %",
+"年利 %",
+"年收益率 %",
+"वार्षिक प्रतिफल %",
+"ساڵانە قازانج %"
+],
+"العكسي: x حيث P(X ≤ x) = p": [
+"Inverse: x where P(X ≤ x) = p",
+"Inverse : x tel que P(X ≤ x) = p",
+"逆関数: P(X ≤ x) = p となる x",
+"反函数: P(X ≤ x) = p 时的 x",
+"व्युत्क्रम: P(X ≤ x) = p वाला x",
+"پێچەوانە: x کە P(X ≤ x) = p"
+],
+"الفئة": [
+"Class",
+"Classe",
+"階級",
+"类别",
+"वर्ग",
+"پۆل"
+],
+"الفائدة السنوية %": [
+"Annual interest %",
+"Intérêt annuel %",
+"年利 %",
+"年利率 %",
+"वार्षिक ब्याज %",
+"سوودی ساڵانە %"
+],
+"الفرق بين تاريخين": [
+"Difference between two dates",
+"Écart entre deux dates",
+"2つの日付の差",
+"两个日期的差",
+"दो तिथियों के बीच अंतर",
+"جیاوازی نێوان دوو بەروار"
+],
+"القيم الذاتية": [
+"Eigenvalues",
+"Valeurs propres",
+"固有値",
+"特征值",
+"आइगेनमान",
+"بەهای تایبەت"
+],
+"القيم القصوى": [
+"Extrema",
+"Extrema",
+"極値",
+"极值",
+"चरम मान",
+"بەهای زۆرترین و کەمترین"
+],
+"القيمة": [
+"Value",
+"Valeur",
+"値",
+"值",
+"मान",
+"بەها"
+],
+"القيمة الجديدة": [
+"New value",
+"Nouvelle valeur",
+"新しい値",
+"新值",
+"नया मान",
+"بەهای نوێ"
+],
+"القيمة القديمة": [
+"Old value",
+"Ancienne valeur",
+"古い値",
+"旧值",
+"पुराना मान",
+"بەهای کۆن"
+],
+"القيمة بهذا الأساس": [
+"Value in this base",
+"Valeur dans cette base",
+"この基数での値",
+"该进制下的值",
+"इस आधार में मान",
+"بەها لەم بنەمایەدا"
+],
+"المبلغ الأولي": [
+"Initial amount",
+"Montant initial",
+"初期金額",
+"初始金额",
+"प्रारंभिक राशि",
+"بڕی سەرەتایی"
+],
+"المساحة بين منحنيين": [
+"Area between two curves",
+"Aire entre deux courbes",
+"2曲線間の面積",
+"两曲线之间的面积",
+"दो वक्रों के बीच क्षेत्रफल",
+"ڕووبەری نێوان دوو هێڵ"
+],
+"المتغير": [
+"Variable",
+"Variable",
+"変数",
+"变量",
+"चर",
+"گۆڕاو"
+],
+"المشتقة": [
+"Derivative",
+"Dérivée",
+"導関数",
+"导数",
+"अवकलज",
+"دەرهێنان"
+],
+"المعادلة 1 بدلالة x و y": [
+"Equation 1 in x and y",
+"Équation 1 en x et y",
+"x と y の方程式 1",
+"关于 x 和 y 的方程 1",
+"x और y में समीकरण 1",
+"یەکسانی 1 بە x و y"
+],
+"المعادلة 2": [
+"Equation 2",
+"Équation 2",
+"方程式 2",
+"方程 2",
+"समीकरण 2",
+"یەکسانی 2"
+],
+"المعادلة بدلالة x": [
+"Equation in x",
+"Équation en x",
+"x の方程式",
+"关于 x 的方程",
+"x में समीकरण",
+"یەکسانی بە x"
+],
+"المعاملات من الأعلى درجة: aₙ, …, a₁, a₀": [
+"Coefficients from highest degree: aₙ, …, a₁, a₀",
+"Coefficients du plus haut degré : aₙ, …, a₁, a₀",
+"高次からの係数: aₙ, …, a₁, a₀",
+"从最高次起的系数: aₙ, …, a₁, a₀",
+"उच्चतम घात से गुणांक: aₙ, …, a₁, a₀",
+"سەرکێشەکان لە بەرزترینەوە: aₙ, …, a₁, a₀"
+],
+"المعايير": [
+"Criteria",
+"Critères",
+"基準",
+"标准",
+"मानदंड",
+"پێوەرەکان"
+],
+"النتائج": [
+"Results",
+"Résultats",
+"結果",
+"结果",
+"परिणाम",
+"ئەنجامەکان"
+],
+"النتيجة": [
+"Result",
+"Résultat",
+"結果",
+"结果",
+"परिणाम",
+"ئەنجام"
+],
+"النتيجة ← A": [
+"Result → A",
+"Résultat → A",
+"結果 → A",
+"结果 → A",
+"परिणाम → A",
+"ئەنجام ← A"
+],
+"النتيجة ← B": [
+"Result → B",
+"Résultat → B",
+"結果 → B",
+"结果 → B",
+"परिणाम → B",
+"ئەنجام ← B"
+],
+"النسبة %": [
+"Ratio %",
+"Pourcentage %",
+"割合 %",
+"比例 %",
+"अनुपात %",
+"ڕێژە %"
+],
+"النموذج": [
+"Model",
+"Modèle",
+"モデル",
+"模型",
+"मॉडल",
+"مۆدێل"
+],
+"النهاية": [
+"Limit",
+"Limite",
+"極限",
+"极限",
+"सीमा",
+"سنوور"
+],
+"الوحدة I": [
+"Unit I",
+"Unité I",
+"単位 I",
+"单位 I",
+"इकाई I",
+"یەکەی I"
+],
+"بحث من": [
+"Search from",
+"Chercher à partir de",
+"検索開始",
+"从…开始搜索",
+"इससे खोजें",
+"لەمەوە بگەڕێ"
+],
+"بكل الوحدات": [
+"All units",
+"Toutes les unités",
+"すべての単位",
+"所有单位",
+"सभी इकाइयाँ",
+"هەموو یەکەکان"
+],
+"بواسون (λ)": [
+"Poisson (λ)",
+"Poisson (λ)",
+"ポアソン (λ)",
+"泊松 (λ)",
+"पॉइसन (λ)",
+"پواسۆن (λ)"
+],
+"تايلور": [
+"Taylor",
+"Taylor",
+"テイラー",
+"泰勒",
+"टेलर",
+"تەیلۆر"
+],
+"تبسيط": [
+"Simplify",
+"Simplifier",
+"簡約",
+"化简",
+"सरल करें",
+"سادەکردنەوە"
+],
+"تحليل": [
+"Factor",
+"Factoriser",
+"因数分解",
+"因式分解",
+"गुणनखंड",
+"فاکتەرکردن"
+],
+"تربيعي": [
+"Quadratic",
+"Quadratique",
+"2次",
+"二次",
+"द्विघात",
+"دووجەمکی"
+],
+"تصوير السؤال": [
+"Photograph question",
+"Photographier la question",
+"問題を撮影",
+"拍摄题目",
+"प्रश्न की फ़ोटो",
+"پرسیار وێنەبگرە"
+],
+"تصوير السؤال (قريباً)": [
+"Photograph question (soon)",
+"Photographier la question (bientôt)",
+"問題を撮影（近日）",
+"拍摄题目（即将推出）",
+"प्रश्न की फ़ोटो (जल्द)",
+"پرسیار وێنەبگرە (بەم زووانە)"
+],
+"تعبير أو معادلة بدلالة x": [
+"Expression or equation in x",
+"Expression ou équation en x",
+"x の式または方程式",
+"关于 x 的表达式或方程",
+"x में व्यंजक या समीकरण",
+"دەربڕین یان یەکسانی بە x"
+],
+"تفاصيل العدد": [
+"Number details",
+"Détails du nombre",
+"数の詳細",
+"数字详情",
+"संख्या का विवरण",
+"وردەکاریی ژمارە"
+],
+"تكامل": [
+"Integral",
+"Intégrale",
+"積分",
+"积分",
+"समाकलन",
+"ئینتیگرال"
+],
+"تكعيبي": [
+"Cubic",
+"Cubique",
+"3次",
+"三次",
+"घन",
+"سێجەمکی"
+],
+"توقّع عند x =": [
+"Evaluate at x =",
+"Évaluer en x =",
+"x = で評価",
+"在 x = 处求值",
+"x = पर मान",
+"لە x = نرخ"
+],
+"ثماني OCT": [
+"Octal OCT",
+"Octal OCT",
+"8進 OCT",
+"八进制 OCT",
+"अष्टाधारी OCT",
+"هەشتەیی OCT"
+],
+"ثنائي": [
+"Binary",
+"Binaire",
+"2進",
+"二进制",
+"द्विआधारी",
+"دوانەیی"
+],
+"ثنائي BIN": [
+"Binary BIN",
+"Binaire BIN",
+"2進 BIN",
+"二进制 BIN",
+"द्विआधारी BIN",
+"دوانەیی BIN"
+],
+"ثنائي الحدين B(n, p)": [
+"Binomial B(n, p)",
+"Binomiale B(n, p)",
+"二項分布 B(n, p)",
+"二项分布 B(n, p)",
+"द्विपद B(n, p)",
+"دوانامی B(n, p)"
+],
+"جدول القيم": [
+"Table of values",
+"Tableau de valeurs",
+"値の表",
+"数值表",
+"मानों की तालिका",
+"خشتەی بەهاکان"
+],
+"جذور وتقاطعات": [
+"Roots & intersections",
+"Racines et intersections",
+"解と交点",
+"根与交点",
+"मूल और प्रतिच्छेद",
+"ڕەگ و تێکەوتنەکان"
+],
+"حاسبة علمية متطورة": [
+"Advanced Scientific Calculator",
+"Calculatrice scientifique avancée",
+"高機能関数電卓",
+"高级科学计算器",
+"उन्नत वैज्ञानिक कैलकुलेटर",
+"ژمێرکاری زانستیی پێشکەوتوو"
+],
+"حتى الرتبة": [
+"Up to order",
+"Jusqu'à l'ordre",
+"次数まで",
+"直到阶",
+"क्रम तक",
+"تا پلەی"
+],
+"حجم دوراني وطول قوس": [
+"Solid of revolution & arc length",
+"Volume de révolution et longueur d'arc",
+"回転体の体積と弧長",
+"旋转体体积与弧长",
+"घूर्णन आयतन और चाप लंबाई",
+"بەرگی سوڕاو و درێژیی کەوان"
+],
+"حدود التكامل": [
+"Integration limits",
+"Bornes d'intégration",
+"積分範囲",
+"积分上下限",
+"समाकलन सीमाएँ",
+"سنوورەکانی ئینتیگرال"
+],
+"حل": [
+"Solve",
+"Résoudre",
+"解く",
+"求解",
+"हल करें",
+"چارەسەر"
+],
+"حل النظام": [
+"Solve system",
+"Résoudre le système",
+"連立方程式を解く",
+"解方程组",
+"तंत्र हल करें",
+"سیستەم چارەسەربکە"
+],
+"حل مباشرة": [
+"Solve directly",
+"Résoudre directement",
+"直接解く",
+"直接求解",
+"सीधे हल करें",
+"ڕاستەوخۆ چارەسەربکە"
+],
+"حلّل": [
+"Analyze",
+"Analyser",
+"解析",
+"分析",
+"विश्लेषण करें",
+"شیکاربکە"
+],
+"حول a": [
+"About a",
+"Autour de a",
+"a の周り",
+"绕 a",
+"a के आसपास",
+"دەوری a"
+],
+"خصائص التوزيع": [
+"Distribution properties",
+"Propriétés de la distribution",
+"分布の性質",
+"分布的性质",
+"वितरण के गुण",
+"تایبەتمەندیی دابەشکردن"
+],
+"خطي y = a + bx": [
+"Linear y = a + bx",
+"Linéaire y = a + bx",
+"線形 y = a + bx",
+"线性 y = a + bx",
+"रैखिक y = a + bx",
+"هێڵی y = a + bx"
+],
+"دوال وثوابت": [
+"Functions & constants",
+"Fonctions et constantes",
+"関数と定数",
+"函数与常数",
+"फलन और स्थिरांक",
+"فەنکشن و بەردەوامەکان"
+],
+"ربع سنوي": [
+"Quarterly",
+"Trimestriel",
+"四半期",
+"季度",
+"त्रैमासिक",
+"چارەکی"
+],
+"ست عشري HEX": [
+"Hexadecimal HEX",
+"Hexadécimal HEX",
+"16進 HEX",
+"十六进制 HEX",
+"षोडशाधारी HEX",
+"شازدەیی HEX"
+],
+"سنوات": [
+"years",
+"années",
+"年",
+"年",
+"वर्ष",
+"ساڵ"
+],
+"سنوي": [
+"Annual",
+"Annuel",
+"年次",
+"年度",
+"वार्षिक",
+"ساڵانە"
+],
+"شهري": [
+"Monthly",
+"Mensuel",
+"月次",
+"月度",
+"मासिक",
+"مانگانە"
+],
+"طبيعي N(μ, σ)": [
+"Normal N(μ, σ)",
+"Normale N(μ, σ)",
+"正規分布 N(μ, σ)",
+"正态 N(μ, σ)",
+"सामान्य N(μ, σ)",
+"ئاسایی N(μ, σ)"
+],
+"عدد المجاهيل": [
+"Number of unknowns",
+"Nombre d'inconnues",
+"未知数の数",
+"未知数个数",
+"अज्ञात की संख्या",
+"ژمارەی نادیارەکان"
+],
+"عشري DEC": [
+"Decimal DEC",
+"Décimal DEC",
+"10進 DEC",
+"十进制 DEC",
+"दशमलव DEC",
+"دەیی DEC"
+],
+"عشوائية": [
+"Random",
+"Aléatoire",
+"ランダム",
+"随机",
+"यादृच्छिक",
+"هەڕەمەکی"
+],
+"على A": [
+"On A",
+"Sur A",
+"A 上",
+"在 A 上",
+"A पर",
+"لەسەر A"
+],
+"على A و B": [
+"On A and B",
+"Sur A et B",
+"A と B 上",
+"在 A 和 B 上",
+"A और B पर",
+"لەسەر A و B"
+],
+"عمليات منطقية مع العدد (عشري)": [
+"Logical operations on the number (decimal)",
+"Opérations logiques sur le nombre (décimal)",
+"数値の論理演算 (10進)",
+"数字的逻辑运算 (十进制)",
+"संख्या पर तार्किक संक्रियाएँ (दशमलव)",
+"کردارە لۆژیکییەکان لەسەر ژمارە (دەیی)"
+],
+"عند x =": [
+"At x =",
+"En x =",
+"x = のとき",
+"当 x =",
+"x = पर",
+"لە x ="
+],
+"غير محدد": [
+"Indefinite",
+"Indéfinie",
+"不定",
+"不定",
+"अनिश्चित",
+"نادیار"
+],
+"فك الأقواس": [
+"Expand",
+"Développer",
+"展開",
+"展开",
+"विस्तार करें",
+"کردنەوەی کەوانە"
+],
+"قرض": [
+"Loan",
+"Prêt",
+"ローン",
+"贷款",
+"ऋण",
+"قەرز"
+],
+"قوة y = a·x^b": [
+"Power y = a·x^b",
+"Puissance y = a·x^b",
+"べき乗 y = a·x^b",
+"幂函数 y = a·x^b",
+"घात y = a·x^b",
+"هێزی y = a·x^b"
+],
+"قيم X": [
+"X values",
+"Valeurs de X",
+"X の値",
+"X 的值",
+"X के मान",
+"بەهاکانی X"
+],
+"قيم Y (اختياري للانحدار)": [
+"Y values (optional for regression)",
+"Valeurs de Y (facultatif pour la régression)",
+"Y の値（回帰は任意）",
+"Y 的值（回归可选）",
+"Y के मान (समाश्रयण के लिए वैकल्पिक)",
+"بەهاکانی Y (ئیختیاری بۆ ڕیگرێسیۆن)"
+],
+"قيمة المشتقة عند نقطة": [
+"Derivative value at a point",
+"Valeur de la dérivée en un point",
+"ある点での導関数の値",
+"某点的导数值",
+"किसी बिंदु पर अवकलज का मान",
+"نرخی دەرهێنان لە خاڵێکدا"
+],
+"كامِل": [
+"Complete",
+"Complet",
+"完全",
+"完全",
+"पूर्ण",
+"تەواو"
+],
+"كثيرة حدود": [
+"Polynomial",
+"Polynôme",
+"多項式",
+"多项式",
+"बहुपद",
+"پۆلینۆم"
+],
+"كسور جزئية": [
+"Partial fractions",
+"Fractions partielles",
+"部分分数",
+"部分分式",
+"आंशिक भिन्न",
+"کەسرە بەشەکییەکان"
+],
+"لوغاريتمي y = a + b·ln x": [
+"Logarithmic y = a + b·ln x",
+"Logarithmique y = a + b·ln x",
+"対数 y = a + b·ln x",
+"对数 y = a + b·ln x",
+"लघुगणकीय y = a + b·ln x",
+"لۆگاریتمی y = a + b·ln x"
+],
+"مبلغ القرض": [
+"Loan amount",
+"Montant du prêt",
+"ローン額",
+"贷款金额",
+"ऋण राशि",
+"بڕی قەرز"
+],
+"محدد": [
+"Definite",
+"Définie",
+"定積分",
+"定积分",
+"निश्चित",
+"دیاریکراو"
+],
+"مساحات وحجوم": [
+"Areas & volumes",
+"Aires et volumes",
+"面積と体積",
+"面积与体积",
+"क्षेत्रफल और आयतन",
+"ڕووبەر و قەبارە"
+],
+"مسح العلامات": [
+"Clear marks",
+"Effacer les repères",
+"マークを消す",
+"清除标记",
+"निशान मिटाएँ",
+"نیشانەکان بسڕەوە"
+],
+"مسح الكل": [
+"Clear all",
+"Tout effacer",
+"すべて消去",
+"全部清除",
+"सब मिटाएँ",
+"هەموو بسڕەوە"
+],
+"معادلة": [
+"Equation",
+"Équation",
+"方程式",
+"方程",
+"समीकरण",
+"یەکسانی"
+],
+"من": [
+"from",
+"de",
+"から",
+"从",
+"से",
+"لە"
+],
+"من (فارغ = التقاطع)": [
+"from (empty = intersection)",
+"de (vide = intersection)",
+"から（空欄 = 交点）",
+"从（空 = 交点）",
+"से (खाली = प्रतिच्छेद)",
+"لە (بەتاڵ = تێکەوتن)"
+],
+"من العدد": [
+"from the number",
+"à partir du nombre",
+"数から",
+"从该数",
+"संख्या से",
+"لە ژمارەوە"
+],
+"من المعرض": [
+"From gallery",
+"Depuis la galerie",
+"ギャラリーから",
+"从相册",
+"गैलरी से",
+"لە گالەری"
+],
+"منتظم U(a, b)": [
+"Uniform U(a, b)",
+"Uniforme U(a, b)",
+"一様分布 U(a, b)",
+"均匀 U(a, b)",
+"एकसमान U(a, b)",
+"یەکگرتوو U(a, b)"
+],
+"نسب مئوية": [
+"Percentages",
+"Pourcentages",
+"パーセント",
+"百分比",
+"प्रतिशत",
+"ڕێژەکان"
+],
+"نظام خطي": [
+"Linear system",
+"Système linéaire",
+"線形連立方程式",
+"线性方程组",
+"रैखिक तंत्र",
+"سیستەمی هێڵی"
+],
+"نظام غير خطي": [
+"Nonlinear system",
+"Système non linéaire",
+"非線形連立方程式",
+"非线性方程组",
+"अरैखिक तंत्र",
+"سیستەمی نا‌هێڵی"
+],
+"نقل إلى الحاسبة للتعديل": [
+"Move to calculator to edit",
+"Transférer à la calculatrice pour modifier",
+"電卓に移して編集",
+"移至计算器编辑",
+"संपादन के लिए कैलकुलेटर में भेजें",
+"بۆ دەستکاریکردن بنێرە بۆ ژمێرکار"
+],
+"هندسي (p)": [
+"Geometric (p)",
+"Géométrique (p)",
+"幾何分布 (p)",
+"几何 (p)",
+"ज्यामितीय (p)",
+"هەندەسی (p)"
+],
+"وسّع": [
+"Expand",
+"Développer",
+"展開",
+"展开",
+"विस्तार करें",
+"فراوانکردن"
+],
+"يومي": [
+"Daily",
+"Quotidien",
+"毎日",
+"每日",
+"दैनिक",
+"ڕۆژانە"
+],
+"أعمدة A": [
+"A columns",
+"Colonnes de A",
+"A の列",
+"A 的列",
+"A के कॉलम",
+"ستوونەکانی A"
+],
+"أعمدة B": [
+"B columns",
+"Colonnes de B",
+"B の列",
+"B 的列",
+"B के कॉलम",
+"ستوونەکانی B"
+],
+"إعادة الضبط": [
+"Reset",
+"Réinitialiser",
+"リセット",
+"重置",
+"रीसेट",
+"دووبارە ڕێکخستنەوە"
+],
+"إغلاق": [
+"Close",
+"Fermer",
+"閉じる",
+"关闭",
+"बंद करें",
+"داخستن"
+],
+"الأوضاع": [
+"Modes",
+"Modes",
+"モード",
+"模式",
+"मोड",
+"دۆخەکان"
+],
+"التعبير أو المعادلة": [
+"Expression or equation",
+"Expression ou équation",
+"式または方程式",
+"表达式或方程",
+"व्यंजक या समीकरण",
+"دەربڕین یان یەکسانی"
+],
+"الحد الأدنى": [
+"Minimum",
+"Minimum",
+"最小",
+"最小值",
+"न्यूनतम",
+"کەمترین"
+],
+"الحد الأعلى": [
+"Maximum",
+"Maximum",
+"最大",
+"最大值",
+"अधिकतम",
+"زۆرترین"
+],
+"النقطة": [
+"Point",
+"Point",
+"点",
+"点",
+"बिंदु",
+"خاڵ"
+],
+"تبديل": [
+"Switch",
+"Basculer",
+"切替",
+"切换",
+"बदलें",
+"گۆڕین"
+],
+"تبديل المظهر": [
+"Toggle theme",
+"Changer le thème",
+"テーマ切替",
+"切换主题",
+"थीम बदलें",
+"ڕووکار بگۆڕە"
+],
+"تصغير": [
+"Zoom out",
+"Dézoomer",
+"縮小",
+"缩小",
+"छोटा करें",
+"بچووککردنەوە"
+],
+"تكبير": [
+"Zoom in",
+"Zoom avant",
+"拡大",
+"放大",
+"बड़ा करें",
+"گەورەکردنەوە"
+],
+"صفوف A": [
+"A rows",
+"Lignes de A",
+"A の行",
+"A 的行",
+"A की पंक्तियाँ",
+"ڕیزەکانی A"
+],
+"صفوف B": [
+"B rows",
+"Lignes de B",
+"B の行",
+"B 的行",
+"B की पंक्तियाँ",
+"ڕیزەکانی B"
+],
+"فاتح / داكن": [
+"Light / Dark",
+"Clair / Sombre",
+"ライト / ダーク",
+"浅色 / 深色",
+"लाइट / डार्क",
+"ڕوون / تاریک"
+],
+"فارغ = متغير واحد": [
+"Empty = one variable",
+"Vide = une variable",
+"空欄 = 変数1つ",
+"空 = 单变量",
+"खाली = एक चर",
+"بەتاڵ = یەک گۆڕاو"
+],
+"قريباً سوف تتوفر هذه الميزة": [
+"This feature is coming soon",
+"Cette fonctionnalité arrive bientôt",
+"この機能は近日公開予定です",
+"该功能即将推出",
+"यह सुविधा जल्द आ रही है",
+"ئەم تایبەتمەندییە بەم زووانە دێت"
+],
+"أدخل دالة أولاً.": [
+"Enter a function first.",
+"Saisissez d'abord une fonction.",
+"まず関数を入力してください。",
+"请先输入函数。",
+"पहले कोई फ़ंक्शन दर्ज करें।",
+"سەرەتا فەنکشنێک بنووسە."
+],
+"أدخل قيماً": [
+"Enter values",
+"Saisissez des valeurs",
+"値を入力してください",
+"请输入数值",
+"मान दर्ज करें",
+"بەها بنووسە"
+],
+"أدخل قيمة": [
+"Enter a value",
+"Saisissez une valeur",
+"値を入力",
+"请输入数值",
+"मान दर्ज करें",
+"بەهایەک بنووسە"
+],
+"أدخل قيماً موجبة": [
+"Enter positive values",
+"Saisissez des valeurs positives",
+"正の値を入力",
+"请输入正数",
+"धनात्मक मान दर्ज करें",
+"بەهای پۆزەتیڤ بنووسە"
+],
+"اختر تاريخاً": [
+"Choose a date",
+"Choisissez une date",
+"日付を選択",
+"请选择日期",
+"तिथि चुनें",
+"بەروارێک هەڵبژێرە"
+],
+"اختر تاريخين": [
+"Choose two dates",
+"Choisissez deux dates",
+"2つの日付を選択",
+"请选择两个日期",
+"दो तिथियाँ चुनें",
+"دوو بەروار هەڵبژێرە"
+],
+"اكتب الدالة بعد d/dx": [
+"Type the function after d/dx",
+"Saisissez la fonction après d/dx",
+"d/dx の後に関数を入力",
+"在 d/dx 后输入函数",
+"d/dx के बाद फ़ंक्शन लिखें",
+"d/dx دوای فەنکشن بنووسە"
+],
+"اكتب الدالة بعد علامة ∫": [
+"Type the function after ∫",
+"Saisissez la fonction après ∫",
+"∫ の後に関数を入力",
+"在 ∫ 后输入函数",
+"∫ के बाद फ़ंक्शन लिखें",
+"∫ دوای فەنکشن بنووسە"
+],
+"اكتب الدالة داخل": [
+"Type the function inside",
+"Saisissez la fonction à l'intérieur",
+"関数を中に入力",
+"在其中输入函数",
+"फ़ंक्शन अंदर लिखें",
+"فەنکشن لە ناوەوە بنووسە"
+],
+"اكتب الحدّين معاً للتكامل المحدد، أو اتركهما فارغين للتكامل غير المحدد": [
+"Enter both limits for a definite integral, or leave them empty for an indefinite one",
+"Saisissez les deux bornes pour une intégrale définie, ou laissez-les vides",
+"定積分は両方の範囲を入力、不定積分は空欄のまま",
+"定积分请输入两个上下限，不定积分请留空",
+"निश्चित समाकलन के लिए दोनों सीमाएँ लिखें, अनिश्चित के लिए खाली छोड़ें",
+"پێناسەکراو دوو سنوور بنووسە، نادیار بەتاڵی بهێڵەرەوە"
+],
+"الأنظمة غير الخطية مدعومة حتى 3 مجاهيل": [
+"Nonlinear systems are supported up to 3 unknowns",
+"Les systèmes non linéaires sont pris en charge jusqu'à 3 inconnues",
+"非線形系は未知数3つまで対応",
+"非线性方程组最多支持 3 个未知数",
+"अरैखिक तंत्र 3 अज्ञात तक समर्थित हैं",
+"سیستەمی نا‌هێڵی تا 3 نادیار پشتگیری دەکرێت"
+],
+"التكامل غير المحدد": [
+"Indefinite integral",
+"Intégrale indéfinie",
+"不定積分",
+"不定积分",
+"अनिश्चित समाकलन",
+"ئینتیگرالی نادیار"
+],
+"التكامل غير المحدد المطلوب": [
+"Requested indefinite integral",
+"Intégrale indéfinie demandée",
+"求める不定積分",
+"所求不定积分",
+"माँगा गया अनिश्चित समाकलन",
+"داواکراوی ئینتیگرالی نادیار"
+],
+"التكامل المحدد المطلوب": [
+"Requested definite integral",
+"Intégrale définie demandée",
+"求める定積分",
+"所求定积分",
+"माँगा गया निश्चित समाकलन",
+"داواکراوی ئینتیگرالی پێناسەکراو"
+],
+"تعذّر الحساب — تحقق من الحدود": [
+"Calculation failed — check the limits",
+"Calcul impossible — vérifiez les bornes",
+"計算できません — 範囲を確認してください",
+"计算失败 — 请检查上下限",
+"गणना विफल — सीमाएँ जाँचें",
+"ژمێرکردن شکستی هێنا — سنوورەکان بپشکنە"
+],
+"تعذّر حساب التكامل.": [
+"Could not compute the integral.",
+"Impossible de calculer l'intégrale.",
+"積分を計算できませんでした。",
+"无法计算积分。",
+"समाकलन की गणना नहीं हो सकी।",
+"ئینتیگرالەکە ژمێردرا نەیتوانی."
+],
+"تعذّرت العملية على هذا التعبير": [
+"Operation failed for this expression",
+"Opération impossible pour cette expression",
+"この式では操作できません",
+"此表达式无法计算",
+"इस व्यंजक पर संक्रिया विफल",
+"ئەم دەربڕینە کارەکە ناکات"
+],
+"تكامل غير محدد": [
+"Indefinite integral",
+"Intégrale indéfinie",
+"不定積分",
+"不定积分",
+"अनिश्चित समाकलन",
+"ئینتیگرالی نادیار"
+],
+"خطوات الحل": [
+"Solution steps",
+"Étapes de la solution",
+"解法の手順",
+"解题步骤",
+"हल के चरण",
+"هەنگاوەکانی چارەسەر"
+],
+"غير معرّف": [
+"Undefined",
+"Indéfini",
+"未定義",
+"未定义",
+"अपरिभाषित",
+"پێناسە نەکراو"
+],
+"غير متقاربة": [
+"Divergent",
+"Divergente",
+"発散",
+"发散",
+"अपसारी",
+"بەرەو دوور"
+],
+"قيمة غير صالحة": [
+"Invalid value",
+"Valeur invalide",
+"無効な値",
+"无效的值",
+"अमान्य मान",
+"بەهای نادروست"
+],
+"قيمة غير صالحة:": [
+"Invalid value:",
+"Valeur invalide :",
+"無効な値:",
+"无效的值：",
+"अमान्य मान:",
+"بەهای نادروست:"
+],
+"لا يوجد": [
+"None",
+"Aucun",
+"なし",
+"无",
+"कोई नहीं",
+"هیچ"
+],
+"لا يوجد حل": [
+"No solution",
+"Pas de solution",
+"解なし",
+"无解",
+"कोई हल नहीं",
+"چارەسەر نییە"
+],
+"لا توجد حلول": [
+"No solutions",
+"Aucune solution",
+"解なし",
+"无解",
+"कोई हल नहीं",
+"هیچ چارەسەرێک نییە"
+],
+"لم أجد حلاً حقيقياً لهذه المعادلة": [
+"No real solution found for this equation",
+"Aucune solution réelle trouvée pour cette équation",
+"この方程式の実数解は見つかりません",
+"未找到该方程的实数解",
+"इस समीकरण का कोई वास्तविक हल नहीं मिला",
+"ئەم یەکسانیە چارەسەری ڕاستەقینە نەدۆزرایەوە"
+],
+"لم أجد نقطتي تقاطع — أدخل الحدود يدوياً": [
+"Two intersection points not found — enter the bounds manually",
+"Deux points d'intersection introuvables — saisissez les bornes manuellement",
+"2つの交点が見つかりません — 範囲を手入力してください",
+"未找到两个交点 — 请手动输入范围",
+"दो प्रतिच्छेद बिंदु नहीं मिले — सीमाएँ हाथ से लिखें",
+"دوو خاڵی تێکەوتن نەدۆزرایەوە — سنوورەکان بە دەست بنووسە"
+],
+"النظام غير متسق: لا يوجد حل": [
+"Inconsistent system: no solution",
+"Système incompatible : pas de solution",
+"連立方程式が矛盾しています: 解なし",
+"方程组不相容：无解",
+"तंत्र असंगत है: कोई हल नहीं",
+"سیستەمەکە ناتەبایە: چارەسەر نییە"
+],
+"القيم يجب أن تكون موجبة": [
+"Values must be positive",
+"Les valeurs doivent être positives",
+"値は正である必要があります",
+"数值必须为正",
+"मान धनात्मक होने चाहिए",
+"بەهاکان دەبێت پۆزەتیڤ بن"
+],
+"المدى غير صحيح": [
+"Invalid range",
+"Plage invalide",
+"範囲が正しくありません",
+"范围无效",
+"सीमा गलत है",
+"ڕێژەی نادروستە"
+],
+"الوحدات غير متوافقة": [
+"Incompatible units",
+"Unités incompatibles",
+"単位が一致しません",
+"单位不兼容",
+"इकाइयाँ असंगत हैं",
+"یەکەکان لەگەڵ یەک ناگونجێن"
+],
+"التعبير غير مكتمل": [
+"Incomplete expression",
+"Expression incomplète",
+"式が不完全です",
+"表达式不完整",
+"व्यंजक अधूरा है",
+"دەربڕینەکە تەواو نییە"
+],
+"مكتبة الجبر الرمزي لم تُحمَّل — تحقق من الاتصال ثم أعد تحميل الصفحة.": [
+"Symbolic algebra library did not load — check your connection and reload.",
+"La bibliothèque d'algèbre n'a pas chargé — vérifiez la connexion et rechargez.",
+"記号代数のライブラリを読み込めませんでした。接続を確認して再読み込みしてください。",
+"符号代数库未加载 — 请检查网络并刷新页面。",
+"प्रतीकात्मक बीजगणित पुस्तकालय लोड नहीं हुआ — कनेक्शन जाँचें और पेज दोबारा लोड करें।",
+"کتێبخانەی جەبری هێمایی بار نەبوو — پەیوەندییەکە بپشکنە و لاپەڕە دووبارە بکەرەوە."
+],
+"تعذّر التكامل الرمزي — جرّب التكامل المحدد.": [
+"Symbolic integration failed — try a definite integral.",
+"Intégration symbolique impossible — essayez une intégrale définie.",
+"記号積分ができません — 定積分を試してください。",
+"符号积分失败 — 请尝试定积分。",
+"प्रतीकात्मक समाकलन विफल — निश्चित समाकलन आज़माएँ।",
+"ئینتیگرالی هێمایی شکستی هێنا — ئینتیگرالی پێناسەکراو تاقی بکەرەوە."
+],
+"دالة غير معرّفة:": [
+"Undefined function:",
+"Fonction indéfinie :",
+"未定義の関数:",
+"未定义函数：",
+"अपरिभाषित फ़ंक्शन:",
+"فەنکشنی ناناسراو:"
+],
+"رمز غير معرّف:": [
+"Undefined symbol:",
+"Symbole indéfini :",
+"未定義の記号:",
+"未定义符号：",
+"अपरिभाषित प्रतीक:",
+"هێمای ناناسراو:"
+],
+"مجاهيل:": [
+"Unknowns:",
+"Inconnues :",
+"未知数:",
+"未知数：",
+"अज्ञात:",
+"نادیارەکان:"
+],
+"معادلات أخرى": [
+"Other equations",
+"Autres équations",
+"他の方程式",
+"其他方程",
+"अन्य समीकरण",
+"یەکسانیەکانی تر"
+],
+"معادلة أخرى": [
+"Another equation",
+"Une autre équation",
+"別の方程式",
+"另一个方程",
+"एक और समीकरण",
+"یەکسانییەکی تر"
+],
+"معادلة جديدة": [
+"New equation",
+"Nouvelle équation",
+"新しい方程式",
+"新方程",
+"नया समीकरण",
+"یەکسانی نوێ"
+],
+"متغيرات": [
+"Variables",
+"Variables",
+"変数",
+"变量",
+"चर",
+"گۆڕاوەکان"
+],
+"نعم": [
+"Yes",
+"Oui",
+"はい",
+"是",
+"हाँ",
+"بەڵێ"
+],
+"لا": [
+"No",
+"Non",
+"いいえ",
+"否",
+"नहीं",
+"نەخێر"
+],
+"صح ✓": [
+"True ✓",
+"Vrai ✓",
+"真 ✓",
+"真 ✓",
+"सत्य ✓",
+"ڕاستە ✓"
+],
+"خطأ ✗": [
+"False ✗",
+"Faux ✗",
+"偽 ✗",
+"假 ✗",
+"असत्य ✗",
+"هەڵەیە ✗"
+],
+"استدعاء:": [
+"Call:",
+"Appel :",
+"呼び出し:",
+"调用：",
+"कॉल:",
+"بانگکردن:"
+],
+"التحقق": [
+"Verify",
+"Vérifier",
+"検算",
+"验证",
+"सत्यापन",
+"پشتڕاستکردنەوە"
+],
+"نعوّض": [
+"Substitute",
+"Substituer",
+"代入する",
+"代入",
+"प्रतिस्थापित करें",
+"دانانی بەها"
+],
+"نعوّض القيم": [
+"Substitute the values",
+"Substituer les valeurs",
+"値を代入する",
+"代入数值",
+"मान प्रतिस्थापित करें",
+"بەهاکان دابنێ"
+],
+"نعوّض في القاعدة": [
+"Substitute into the rule",
+"Substituer dans la règle",
+"公式に代入する",
+"代入公式",
+"नियम में प्रतिस्थापित करें",
+"بخە ناو یاساکە"
+],
+"نقرأ الحل من العمود الأخير": [
+"Read the solution from the last column",
+"Lire la solution dans la dernière colonne",
+"最後の列から解を読む",
+"从最后一列读取解",
+"अंतिम कॉलम से हल पढ़ें",
+"چارەسەرەکە لە دوایین ستوونەوە بخوێنەرەوە"
+],
+"الدالة المطلوب اشتقاقها": [
+"Function to differentiate",
+"Fonction à dériver",
+"微分する関数",
+"要求导的函数",
+"जिस फ़ंक्शन का अवकलज चाहिए",
+"فەنکشنی پێویستە جیابکرێتەوە"
+],
+"باستخدام قواعد الاشتقاق": [
+"Using differentiation rules",
+"En utilisant les règles de dérivation",
+"微分の公式を使って",
+"使用求导法则",
+"अवकलन के नियमों से",
+"بە بەکارهێنانی یاساکانی دەرهێنان"
+],
+"بعد التبسيط": [
+"After simplification",
+"Après simplification",
+"簡約後",
+"化简后",
+"सरल करने के बाद",
+"دوای سادەکردنەوە"
+],
+"تنبيه: لم يتطابق التحقق العددي، راجع الناتج": [
+"Warning: numerical check did not match, review the result",
+"Attention : la vérification numérique ne correspond pas, vérifiez le résultat",
+"注意: 数値検算が一致しません。結果を確認してください",
+"注意：数值验证不一致，请检查结果",
+"चेतावनी: संख्यात्मक जाँच मेल नहीं खाई, परिणाम जाँचें",
+"ئاگاداری: پشتڕاستکردنەوەی ژمارەیی نەگونجا، ئەنجامەکە بپشکنە"
+],
+"حل المعادلة في": [
+"Solve the equation for",
+"Résoudre l'équation pour",
+"方程式を解く変数:",
+"求解方程的变量",
+"समीकरण को हल करें के लिए",
+"یەکسانی چارەسەربکە بۆ"
+],
+"حل وحيد": [
+"Unique solution",
+"Solution unique",
+"唯一解",
+"唯一解",
+"एक अनूठा हल",
+"تەنیا یەک چارەسەر"
+],
+"حلول حقيقية": [
+"Real solutions",
+"Solutions réelles",
+"実数解",
+"实数解",
+"वास्तविक हल",
+"چارەسەری ڕاستەقینە"
+],
+"حلول": [
+"Solutions",
+"Solutions",
+"解",
+"解",
+"हल",
+"چارەسەرەکان"
+],
+"حل عددي": [
+"Numerical solution",
+"Solution numérique",
+"数値解",
+"数值解",
+"संख्यात्मक हल",
+"چارەسەری ژمارەیی"
+],
+"لا يوجد في المدى الظاهر": [
+"Not in the visible range",
+"Absent de la plage visible",
+"表示範囲内にありません",
+"不在可见范围内",
+"दृश्य सीमा में नहीं",
+"لە ڕێژەی دیارەکەدا نییە"
+],
+"النهاية غير موجودة": [
+"Limit does not exist",
+"La limite n'existe pas",
+"極限は存在しません",
+"极限不存在",
+"सीमा मौजूद नहीं है",
+"سنوور بوونی نییە"
+],
+"من اليسار →": [
+"From the left →",
+"Par la gauche →",
+"左から →",
+"从左侧 →",
+"बाईं ओर से →",
+"لە چەپەوە →"
+],
+"الدالة أو مشتقاتها غير معرّفة عند a": [
+"The function or its derivatives are undefined at a",
+"La fonction ou ses dérivées ne sont pas définies en a",
+"関数またはその導関数は a で未定義です",
+"函数或其导数在 a 处未定义",
+"फ़ंक्शन या उसके अवकलज a पर अपरिभाषित हैं",
+"فەنکشنەکە یان دەرهێنانەکانی لە a دا پێناسە نەکراون"
+],
+"الدالة غير معرّفة حول هذه النقطة.": [
+"The function is undefined around this point.",
+"La fonction n'est pas définie autour de ce point.",
+"この点の周辺で関数は未定義です。",
+"该点附近函数未定义。",
+"इस बिंदु के आसपास फ़ंक्शन अपरिभाषित है।",
+"فەنکشنەکە لە دەوری ئەم خاڵە پێناسە نەکراوە."
+],
+"النموذج اللوغاريتمي يتطلب x > 0": [
+"Logarithmic model requires x > 0",
+"Le modèle logarithmique exige x > 0",
+"対数モデルは x > 0 が必要です",
+"对数模型要求 x > 0",
+"लघुगणकीय मॉडल के लिए x > 0 चाहिए",
+"مۆدێلی لۆگاریتمی پێویستی بە x > 0 ە"
+],
+"النموذج الأسّي يتطلب y > 0": [
+"Exponential model requires y > 0",
+"Le modèle exponentiel exige y > 0",
+"指数モデルは y > 0 が必要です",
+"指数模型要求 y > 0",
+"घातांकी मॉडल के लिए y > 0 चाहिए",
+"مۆدێلی ئیکسپۆنەنشیاڵ پێویستی بە y > 0 ە"
+],
+"نموذج القوة يتطلب x و y > 0": [
+"Power model requires x and y > 0",
+"Le modèle de puissance exige x et y > 0",
+"べき乗モデルは x と y > 0 が必要です",
+"幂模型要求 x 和 y > 0",
+"घात मॉडल के लिए x और y > 0 चाहिए",
+"مۆدێلی هێز پێویستی بە x و y > 0 ە"
+],
+"يجب أن يكون 0 ≤ r ≤ n": [
+"Must have 0 ≤ r ≤ n",
+"Doit satisfaire 0 ≤ r ≤ n",
+"0 ≤ r ≤ n である必要があります",
+"须满足 0 ≤ r ≤ n",
+"0 ≤ r ≤ n होना चाहिए",
+"دەبێت 0 ≤ r ≤ n بێت"
+],
+"يجب أن يكون بين 0 و 1": [
+"Must be between 0 and 1",
+"Doit être entre 0 et 1",
+"0 から 1 の間である必要があります",
+"必须在 0 到 1 之间",
+"0 और 1 के बीच होना चाहिए",
+"دەبێت لە نێوان 0 و 1 دا بێت"
+],
+"معاملات التوزيع غير صالحة": [
+"Invalid distribution parameters",
+"Paramètres de distribution invalides",
+"分布のパラメータが無効です",
+"分布参数无效",
+"वितरण के पैरामीटर अमान्य हैं",
+"پارامەترەکانی دابەشکردن نادروستن"
+],
+"كثافة احتمالية وليست احتمالاً": [
+"Probability density, not a probability",
+"Densité de probabilité, pas une probabilité",
+"確率密度であって確率ではありません",
+"这是概率密度，不是概率",
+"यह प्रायिकता घनत्व है, प्रायिकता नहीं",
+"ئەمە چڕیی ئەگەرە، نەک ئەگەر"
+],
+"الحد الأعلى أصغر من الأدنى": [
+"Upper bound is less than lower bound",
+"La borne supérieure est inférieure à la borne inférieure",
+"上限が下限より小さいです",
+"上限小于下限",
+"ऊपरी सीमा निचली सीमा से छोटी है",
+"سنووری سەرەوە لە خوارەوە بچووکترە"
+],
+"الحد الأقصى 6 مجاهيل": [
+"Maximum 6 unknowns",
+"Maximum 6 inconnues",
+"最大6つの未知数",
+"最多 6 个未知数",
+"अधिकतम 6 अज्ञात",
+"زۆرترین 6 نادیار"
+],
+"أبعاد المصفوفات غير متوافقة لهذه العملية": [
+"Matrix dimensions are incompatible for this operation",
+"Les dimensions des matrices sont incompatibles pour cette opération",
+"この演算では行列のサイズが合いません",
+"矩阵维度与此运算不兼容",
+"इस संक्रिया के लिए आव्यूह के आयाम असंगत हैं",
+"قەبارەی ماتریکسەکان لەگەڵ ئەم کارە ناگونجێن"
+],
+"النظام غير خطي. نكتب كل معادلة بالصيغة F = 0": [
+"The system is nonlinear. Write each equation as F = 0",
+"Le système est non linéaire. Écrivez chaque équation sous la forme F = 0",
+"非線形の系です。各式を F = 0 の形で書いてください",
+"系统是非线性的，请将每个方程写成 F = 0 的形式",
+"तंत्र अरैखिक है। हर समीकरण को F = 0 के रूप में लिखें",
+"سیستەمەکە نا‌هێڵییە. هەر یەکسانییەک بە شێوەی F = 0 بنووسە"
+],
+"كل سطر في النظام يجب أن يكون معادلة فيها علامة =": [
+"Each line of the system must be an equation containing =",
+"Chaque ligne du système doit être une équation contenant =",
+"連立方程式の各行は = を含む式である必要があります",
+"方程组的每一行都必须是含 = 的方程",
+"तंत्र की हर पंक्ति में = वाला समीकरण होना चाहिए",
+"هەر دێڕێکی سیستەمەکە دەبێت یەکسانی بێت کە = ی تێدابێت"
+],
+"عدد النقاط قليل لهذا النموذج": [
+"Too few points for this model",
+"Trop peu de points pour ce modèle",
+"このモデルには点が少なすぎます",
+"此模型的数据点太少",
+"इस मॉडल के लिए बिंदु बहुत कम हैं",
+"ئەم مۆدێلە خاڵی زۆر کەمی هەیە"
+],
+"أدخل قيم Y بنفس عدد قيم X لحساب الانحدار.": [
+"Enter Y values with the same count as X to compute regression.",
+"Saisissez autant de valeurs Y que de valeurs X pour calculer la régression.",
+"回帰を計算するには X と同じ数の Y を入力してください。",
+"请输入与 X 数量相同的 Y 值以计算回归。",
+"समाश्रयण की गणना के लिए X के बराबर Y मान लिखें।",
+"بۆ ژمێردنی ڕیگرێسیۆن، هەمان ژمارەی بەهای Y بنووسە کە X هەیە."
+],
+"مكتبة التكامل الرمزي لم تُحمَّل": [
+"Symbolic integration library did not load",
+"La bibliothèque d'intégration n'a pas chargé",
+"記号積分のライブラリを読み込めませんでした",
+"符号积分库未加载",
+"प्रतीकात्मक समाकलन पुस्तकालय लोड नहीं हुआ",
+"کتێبخانەی ئینتیگرالی هێمایی بار نەبوو"
+],
+"أساسي": [
+"Basic",
+"Base",
+"基本",
+"基本",
+"बुनियादी",
+"سەرەکی"
+],
+"أساسية": [
+"Basic",
+"Base",
+"基本",
+"基本",
+"बुनियादी",
+"سەرەکی"
+],
+"الجبر": [
+"Algebra",
+"Algèbre",
+"代数",
+"代数",
+"बीजगणित",
+"جەبر"
+],
+"التحليل": [
+"Analysis",
+"Analyse",
+"解析",
+"分析",
+"विश्लेषण",
+"شیکاری"
+],
+"الإحصاء": [
+"Statistics",
+"Statistiques",
+"統計",
+"统计",
+"सांख्यिकी",
+"ئامار"
+],
+"تطبيقات": [
+"Applications",
+"Applications",
+"応用",
+"应用",
+"अनुप्रयोग",
+"بەکارهێنان"
+],
+"الجبر الرمزي": [
+"Symbolic algebra",
+"Algèbre symbolique",
+"記号代数",
+"符号代数",
+"प्रतीकात्मक बीजगणित",
+"جەبری هێمایی"
+],
+"المعادلات": [
+"Equations",
+"Équations",
+"方程式",
+"方程",
+"समीकरण",
+"یەکسانیەکان"
+],
+"المصفوفات": [
+"Matrices",
+"Matrices",
+"行列",
+"矩阵",
+"आव्यूह",
+"ماتریکسەکان"
+],
+"التكامل": [
+"Integral",
+"Intégrale",
+"積分",
+"积分",
+"समाकलन",
+"ئینتیگرال"
+],
+"التفاضل والنهايات": [
+"Derivatives & limits",
+"Dérivées et limites",
+"微分と極限",
+"导数与极限",
+"अवकलज और सीमा",
+"دەرهێنان و سنوورەکان"
+],
+"المتسلسلات": [
+"Series",
+"Séries",
+"級数",
+"级数",
+"श्रेणी",
+"ڕیزەکان"
+],
+"الرسم البياني": [
+"Graph",
+"Graphe",
+"グラフ",
+"图像",
+"ग्राफ़",
+"نەخشە"
+],
+"الإحصاء والانحدار": [
+"Statistics & regression",
+"Statistiques et régression",
+"統計と回帰",
+"统计与回归",
+"सांख्यिकी और समाश्रयण",
+"ئامار و ڕیگرێسیۆن"
+],
+"التوزيعات": [
+"Distributions",
+"Distributions",
+"分布",
+"分布",
+"बंटन",
+"دابەشکردنەکان"
+],
+"الأشكال والمقاطع": [
+"Shapes & sections",
+"Formes et sections",
+"図形と断面",
+"图形与截面",
+"आकार और खंड",
+"شێوە و بڕینەکان"
+],
+"المالية": [
+"Finance",
+"Finance",
+"金融",
+"金融",
+"वित्त",
+"دارایی"
+],
+"التواريخ": [
+"Dates",
+"Dates",
+"日付",
+"日期",
+"तिथियाँ",
+"بەرواری"
+],
+"الوحدات": [
+"Units",
+"Unités",
+"単位",
+"单位",
+"इकाइयाँ",
+"یەکەکان"
+],
+"الأنظمة العددية": [
+"Number bases",
+"Bases numériques",
+"数の基数",
+"进制",
+"संख्या आधार",
+"بنەماکانی ژمارە"
+],
+"اللغة": [
+"Language",
+"Langue",
+"言語",
+"语言",
+"भाषा",
+"زمان"
+]
+};
+/* ================= i18n ================= */
+const I18N_LANGS=[['ar','العربية','rtl'],['en','English','ltr'],['fr','Français','ltr'],['ja','日本語','ltr'],['zh','中文','ltr'],['hi','हिन्दी','ltr'],['ku','کوردی','rtl']];
+const I18N_FONT={en:'"IBM Plex Sans Arabic","Segoe UI",Roboto,Arial,sans-serif',fr:'"IBM Plex Sans Arabic","Segoe UI",Roboto,Arial,sans-serif',ja:'"Hiragino Sans","Yu Gothic UI","Noto Sans JP","Meiryo",sans-serif',zh:'"PingFang SC","Microsoft YaHei","Noto Sans SC","Heiti SC",sans-serif',hi:'"Nirmala UI","Mangal","Noto Sans Devanagari",sans-serif',ku:'"Noto Sans Arabic","Segoe UI",Tahoma,sans-serif'};
+const I18N_TITLE={ar:'حاسبة علمية متطورة',en:'Advanced Scientific Calculator',fr:'Calculatrice scientifique avancée',ja:'高機能関数電卓',zh:'高级科学计算器',hi:'उन्नत वैज्ञानिक कैलकुलेटर',ku:'ژمێرکاری زانستیی پێشکەوتوو'};
+let curLang='ar';
+try{ const s=localStorage.getItem('mizan_lang'); if(s && I18N_LANGS.some(l=>l[0]===s)) curLang=s }catch(e){}
+const i18nText=new WeakMap();   // text node -> {o: original Arabic, s: last value we wrote}
+const i18nAttr=new WeakMap();   // element -> {attr: {o, s}}
+const I18N_ATTRS=['placeholder','title','aria-label'];
+const I18N_SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1,CODE:0};
+function i18nLookup(key){ const row=I18N_DATA[key]; if(!row) return null; return curLang==='ar'?key:row[I18N_LANGS.findIndex(l=>l[0]===curLang)-1]; }
+function i18nApplyString(src){ // keep the surrounding whitespace, translate the trimmed core
+  const m=src.match(/^(\s*)([\s\S]*?)(\s*)$/); const core=m[2];
+  const t=core?i18nLookup(core):null; if(t==null) return src;
+  return m[1]+t+m[3];
+}
+function i18nNode(n){
+  const cur=n.nodeValue; if(cur==null) return;
+  let rec=i18nText.get(n);
+  if(!rec || rec.s!==cur){ rec={o:cur,s:cur}; i18nText.set(n,rec) } // changed by the app: this is the new source text
+  const out=i18nApplyString(rec.o);
+  if(out!==cur){ rec.s=out; n.nodeValue=out } else rec.s=cur;
+}
+function i18nAttrs(el){
+  if(!el.getAttribute) return;
+  for(const a of I18N_ATTRS){
+    if(!el.hasAttribute(a)) continue;
+    const cur=el.getAttribute(a);
+    let st=i18nAttr.get(el); if(!st){ st={}; i18nAttr.set(el,st) }
+    let rec=st[a]; if(!rec || rec.s!==cur){ rec={o:cur,s:cur}; st[a]=rec }
+    const out=i18nApplyString(rec.o);
+    if(out!==cur){ rec.s=out; el.setAttribute(a,out) } else rec.s=cur;
+  }
+}
+function i18nWalk(root){
+  if(!root) return;
+  if(root.nodeType===3){ i18nNode(root); return }
+  if(root.nodeType!==1) return;
+  if(I18N_SKIP[root.nodeName]) return;
+  i18nAttrs(root);
+  const tw=document.createTreeWalker(root,NodeFilter.SHOW_ELEMENT|NodeFilter.SHOW_TEXT);
+  let n=tw.currentNode;
+  while(n){
+    if(n.nodeType===3) i18nNode(n);
+    else { if(I18N_SKIP[n.nodeName]){ n=tw.nextSibling()||null; continue } i18nAttrs(n) }
+    n=tw.nextNode();
+  }
+}
+function i18nFont(){
+  let st=document.getElementById('i18nFont');
+  if(!st){ st=document.createElement('style'); st.id='i18nFont'; document.head.appendChild(st) }
+  const f=I18N_FONT[curLang]||I18N_FONT.en;
+  st.textContent=curLang==='ar'?'':'html[data-lang] body,html[data-lang] .app{font-family:'+f.replace(/'/g,"\\'")+'!important}';
+}
+function setLang(l){
+  if(!I18N_LANGS.some(x=>x[0]===l)) return;
+  curLang=l;
+  try{ localStorage.setItem('mizan_lang',l) }catch(e){}
+  const meta=I18N_LANGS.find(x=>x[0]===l);
+  document.documentElement.lang=l;
+  document.documentElement.dir=meta[2];
+  document.documentElement.dataset.lang=l;
+  document.querySelectorAll('.app').forEach(a=>a.dir=meta[2]);
+  document.title=I18N_TITLE[l];
+  i18nFont();
+  i18nWalk(document.body);
+  buildLangGrid();
+  const cur=document.getElementById('langCur'); if(cur) cur.textContent=l.toUpperCase();
+}
+function buildLangGrid(){
+  const g=document.getElementById('langGrid'); if(!g) return;
+  g.innerHTML='';
+  for(const [code,name] of I18N_LANGS){
+    const b=document.createElement('button'); b.type='button'; b.className='mtile';
+    b.textContent=name; b.setAttribute('aria-pressed',String(code===curLang));
+    if(code===curLang) b.dataset.on='1';
+    b.onclick=()=>{ setLang(code); closeLang() };
+    g.appendChild(b);
+  }
+}
+function openLang(){ const s=document.getElementById('langSheet'); if(s){ buildLangGrid(); s.hidden=false } }
+function closeLang(){ const s=document.getElementById('langSheet'); if(s) s.hidden=true }
+function initI18n(){
+  const lb=document.getElementById('langBtn'); if(lb) lb.onclick=openLang;
+  const ls=document.getElementById('langSheet');
+  if(ls){ ls.addEventListener('click',e=>{ if(e.target===ls) closeLang() }); ls.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeLang) }
+  setLang(curLang);
+  new MutationObserver(muts=>{
+    for(const m of muts){
+      if(m.type==='characterData'){ i18nNode(m.target) }
+      else if(m.type==='attributes'){ i18nAttrs(m.target) }
+      else m.addedNodes.forEach(n=>i18nWalk(n));
+    }
+  }).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:I18N_ATTRS});
+}
 /* ================= init ================= */
 buildMenu();
 installCalcPages();
@@ -2173,6 +4585,7 @@ setAngle(angle); setFmt(fmtMode);
 showResult(lastVal); renderHist(); memUI();
 ['#eqGo','#polyGo','#linGo','#nlGo','#dGo','#lGo','#exGo','#tyGo','#sGo','#indGo','#iGo','#dbGo','#abGo','#rvGo','#stGo','#tbGo'].forEach(s=>{ try{ $(s).click() }catch(e){} });
 try{ $('[data-sym="simplify"]').click() }catch(e){} try{ $('[data-mop="inv"]').click() }catch(e){}
+initI18n();
 const h0=(location.hash||'').slice(1); go(MODE[h0]?h0:store.get('page','calc'));
 })();
 </script>
